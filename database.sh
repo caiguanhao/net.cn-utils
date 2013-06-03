@@ -4,6 +4,7 @@ BASH="/bin/bash"
 PWD="`pwd`"
 INFO_SH="info.sh"
 MYSQLDUMP_TPL="mysqldump.tpl"
+COUNTDOWN=5
 
 CURL=$(which curl)
 
@@ -79,6 +80,44 @@ if [[ $TODO == "BACKUP" ]]; then
 
 elif [[ $TODO == "DROP" ]]; then
 
-    echo "Drop"
+    MYSQL=$(which mysql)
+
+    if [[ ${#MYSQL} -eq 0 ]]; then
+        echo "Install mysql (client) first."
+        exit 1
+    fi
+
+    TABLES=(`echo "SHOW TABLES;" | \
+        $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
+
+    if [[ ${#TABLES[@]} -eq 0 ]]; then
+        echo "No tables in the database. Nothing to drop."
+        exit 0
+    fi
+
+    echo "Found ${#TABLES[@]} tables."
+
+    for (( i = $COUNTDOWN; i >= 0; i-- )); do
+        if [[ $i -ne $COUNTDOWN ]]; then
+            printf "\e[1A"
+        fi
+        echo "Start dropping tables in ${i} seconds... Ctrl-C to cancel."
+        sleep 1
+    done
+
+    for (( i = 0; i < ${#TABLES[@]}; i++ )); do
+        j=$(( $i + 1 ))
+        echo -n "Dropping table ${TABLES[$i]} [$j/${#TABLES[@]}] ... "
+        echo "DROP TABLE \`${TABLES[$i]}\`;" | \
+            $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null
+        if [[ $? -eq 0 ]]; then
+            echo "Done"
+        else
+            echo "Fail"
+            exit 1
+        fi
+    done
 
 fi
+
+exit 0
