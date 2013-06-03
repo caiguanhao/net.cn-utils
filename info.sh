@@ -10,6 +10,8 @@ USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
+ARGUMENTS_COUNT=$#
+
 extract_value_of()
 {
     RESULT=${!3%%\"${1}\"*}
@@ -65,14 +67,16 @@ extract_value_of Scriptlist from INFO to SCRIPTS
 
 extract_value_of Statusname from INFO to STATUS
 
-echo "Info for ${SITEID}:"
-echo "  Product Type:             ${TYPENAME}"
-echo "  Valid From:               ${OPENDATE}"
-echo "  Valid To:                 ${ENDDATE}"
-echo "  Status:                   ${STATUS}"
-echo "  IP Address:               ${SITEIP}"
-echo "  Operating System:         ${OSNAME}"
-echo "  Programming Languages:    ${SCRIPTS}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "Info for ${SITEID}:"
+    echo "  Product Type:             ${TYPENAME}"
+    echo "  Valid From:               ${OPENDATE}"
+    echo "  Valid To:                 ${ENDDATE}"
+    echo "  Status:                   ${STATUS}"
+    echo "  IP Address:               ${SITEIP}"
+    echo "  Operating System:         ${OSNAME}"
+    echo "  Programming Languages:    ${SCRIPTS}"
+fi
 
 # FTP Link
 
@@ -81,7 +85,9 @@ FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
-echo "  FTP Link:                 ${FTPLINK}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "  FTP Link:                 ${FTPLINK}"
+fi
 
 # Space Usage
 
@@ -91,7 +97,9 @@ INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexSpaceDiv" \
 -A "${USER_AGENT}" | iconv -f gbk`
 SPACEUSED=${INFO##*&nbsp;}
 
-echo "  Space Usage:              ${SPACEUSED}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "  Space Usage:              ${SPACEUSED}"
+fi
 
 # Bandwidth Usage
 
@@ -101,7 +109,9 @@ INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexFlowDiv" \
 -A "${USER_AGENT}" | iconv -f gbk`
 BWUSED=${INFO##*>}
 
-echo "  Bandwidth Usage:          ${BWUSED}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "  Bandwidth Usage:          ${BWUSED}"
+fi
 
 # Database Name and PhpMyAdmin URL
 
@@ -127,9 +137,10 @@ _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
 
 DBLINK=${_INFO%%\'*}
 
-echo "  PhpMyAdmin Link:          ${DBLINK}"
-
-echo "  Database Name:            ${DBNAME}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "  PhpMyAdmin Link:          ${DBLINK}"
+    echo "  Database Name:            ${DBNAME}"
+fi
 
 # Database Server, User Name, Password
 
@@ -143,14 +154,14 @@ PMA=`$CURL -s -L "${DBLINK}" \
 get_value_from PMA starting_from 'id="input_servername"'
 DBSERVER=${PMA%%\"*}
 
-echo "  Database Server:          ${DBSERVER}"
-
 get_value_from PMA starting_from 'id="input_username"'
 DBUSER=${PMA%%\"*}
-
-echo "  Database User Name:       ${DBUSER}"
 
 get_value_from PMA starting_from 'id="input_password"'
 DBPASS=${PMA%%\"*}
 
-echo "  Database Password:        ${DBPASS}"
+if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    echo "  Database Server:          ${DBSERVER}"
+    echo "  Database User Name:       ${DBUSER}"
+    echo "  Database Password:        ${DBPASS}"
+fi
