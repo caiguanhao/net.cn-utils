@@ -27,6 +27,29 @@ PART2_VAR=(     FTPLINK                                                     )
 PART2_SHORT=(   -ftp                                                        )
 PART2_LONG=(    --ftp-link                                                  )
 
+PART3=0
+PART3_VAR=(     SPACEUSED                                                   )
+PART3_SHORT=(   -sp                                                         )
+PART3_LONG=(    --space-usage                                               )
+
+PART4=0
+PART4_VAR=(     BWUSED                                                      )
+PART4_SHORT=(   -bw                                                         )
+PART4_LONG=(    --bandwidth-usage                                           )
+
+PART5=0
+PART5_VAR=(     DBLINK                          DBNAME                      )
+PART5_SHORT=(   -pma                            -dbn                        )
+PART5_LONG=(    --phpmyadmin-link               --database-name             )
+
+PART6=0
+PART6_VAR=(     DBSERVER                        DBUSER
+                DBPASS                                                      )
+PART6_SHORT=(   -dbs                            -dbu
+                -dbp                                                        )
+PART6_LONG=(    --database-server               --database-username
+                --database-password                                         )
+
 for (( i = 1; i <= $#; i++ )); do
     for (( j = 1; j <= 6; j++ )); do
         SHORT="PART${j}_SHORT[@]"
@@ -136,8 +159,9 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
     SPACEUSED=${INFO##*&nbsp;}
 
-    echo "  Space Usage:              ${SPACEUSED}"
-
+    if [[ $PART3 -eq 0 ]]; then
+        echo "  Space Usage:              ${SPACEUSED}"
+    fi
 fi
 
 # Bandwidth Usage
@@ -150,8 +174,9 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
     BWUSED=${INFO##*>}
 
-    echo "  Bandwidth Usage:          ${BWUSED}"
-
+    if [[ $PART4 -eq 0 ]]; then
+        echo "  Bandwidth Usage:          ${BWUSED}"
+    fi
 fi
 
 # Database Name and PhpMyAdmin URL
@@ -180,9 +205,10 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]]; then
 
     DBLINK=${_INFO%%\'*}
 
-    echo "  PhpMyAdmin Link:          ${DBLINK}"
-    echo "  Database Name:            ${DBNAME}"
-
+    if [[ $PART5 -eq 0 ]]; then
+        echo "  PhpMyAdmin Link:          ${DBLINK}"
+        echo "  Database Name:            ${DBNAME}"
+    fi
 fi
 
 # Database Server, User Name, Password
@@ -205,10 +231,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
     get_value_from PMA starting_from 'id="input_password"'
     DBPASS=${PMA%%\"*}
 
-    echo "  Database Server:          ${DBSERVER}"
-    echo "  Database User Name:       ${DBUSER}"
-    echo "  Database Password:        ${DBPASS}"
-
+    if [[ $PART6 -eq 0 ]]; then
+        echo "  Database Server:          ${DBSERVER}"
+        echo "  Database User Name:       ${DBUSER}"
+        echo "  Database Password:        ${DBPASS}"
+    fi
 fi
 
 if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
