@@ -12,6 +12,7 @@ if [[ ${#CURL} -eq 0 ]]; then
     exit 1
 fi
 
+TODO=""
 OUTPUT_FILE="-"
 VERBOSE=""
 
@@ -19,6 +20,9 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         -b|--backup)
             shift
+            if [[ ${#TODO} -gt 0 ]]; then
+                echo "One database action at a time." && exit 1
+            fi
             TODO="BACKUP"
             ;;
         -o|--output)
@@ -30,6 +34,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         -d|--drop|--delete)
             shift
+            if [[ ${#TODO} -gt 0 ]]; then
+                echo "One database action at a time." && exit 1
+            fi
             TODO="DROP"
             ;;
         -v|--verbose)
@@ -45,7 +52,7 @@ done
 INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp`)
 
 if [[ $? -ne 0 ]]; then
-    echo "[Error] $INFO_SH : ${INFO[@]}"
+    echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
     exit 1
 fi
 
@@ -56,14 +63,22 @@ DBH=${INFO[3]}
 DBU=${INFO[4]}
 DBP=${INFO[5]}
 
-RAND=$(($RANDOM$RANDOM%99999999+10000000))
-FILE="mysqldump_${RAND}.php"
+if [[ $TODO == "BACKUP" ]]; then
 
-cat "$PWD/$MYSQLDUMP_TPL" | \
-sed "s/{{{DBNAME}}}/${DBN}/" | \
-sed "s/{{{HOST}}}/${DBH}/" | \
-sed "s/{{{USER}}}/${DBU}/" | \
-sed "s/{{{PASS}}}/${DBP}/" | \
-$CURL -s ${VERBOSE} -T - "$FTP/htdocs/${FILE}"
+    RAND=$(($RANDOM$RANDOM%99999999+10000000))
+    FILE="mysqldump_${RAND}.php"
 
-$CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
+    cat "$PWD/$MYSQLDUMP_TPL" | \
+    sed "s/{{{DBNAME}}}/${DBN}/" | \
+    sed "s/{{{HOST}}}/${DBH}/" | \
+    sed "s/{{{USER}}}/${DBU}/" | \
+    sed "s/{{{PASS}}}/${DBP}/" | \
+    $CURL -s ${VERBOSE} -T - "$FTP/htdocs/${FILE}"
+
+    $CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
+
+elif [[ $TODO == "DROP" ]]; then
+
+    echo "Drop"
+
+fi
