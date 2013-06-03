@@ -20,14 +20,25 @@ PART1_SHORT=(   -t              -vf             -vt             -s
 PART1_LONG=(    --type          --valid-from    --valid-to      --status
                 --ip-address    --system        --languages                 )
 
+PART2=()
+PART2_VAR=(     FTPLINK                                                     )
+PART2_SHORT=(   -ftp                                                        )
+PART2_LONG=(    --ftp-link                                                  )
+
 for (( i = 1; i <= $#; i++ )); do
-    for (( j = 0; j < ${#PART1_SHORT[@]}; j++ )); do
-        if [[ ${PART1_SHORT[$j]} == ${@:$i:1} ]]; then
-            PART1=(${PART1[@]} ${PART1_VAR[$j]})
-        fi
-        if [[ ${PART1_LONG[$j]} == ${@:$i:1} ]]; then
-            PART1=(${PART1[@]} ${PART1_VAR[$j]})
-        fi
+    for (( j = 1; j <= 6; j++ )); do
+        SHORT="PART${j}_SHORT[@]"
+        SHORT=(${!SHORT})
+        LONG="PART${j}_LONG[@]"
+        LONG=(${!LONG})
+        for (( k = 0; k < ${#SHORT[@]}; k++ )); do
+            if [[ ${SHORT[$k]} == ${@:$i:1} ]]; then
+                eval "PART${j}=(\${PART${j}[@]} \${PART${j}_VAR[$k]})"
+            fi
+            if [[ ${LONG[$k]} == ${@:$i:1} ]]; then
+                eval "PART${j}=(\${PART${j}[@]} \${PART${j}_VAR[$k]})"
+            fi
+        done
     done
 done
 
@@ -97,24 +108,21 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART1[@]} -gt 0 ]]; then
         echo "  IP Address:               ${SITEIP}"
         echo "  Operating System:         ${OSNAME}"
         echo "  Programming Languages:    ${SCRIPTS}"
-    else
-        for P1 in "${PART1[@]}"; do
-            echo "${!P1}"
-        done
     fi
 fi
 
 # FTP Link
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART2[@]} -eq 1 ]]; then
 
     FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
-    echo "  FTP Link:                 ${FTPLINK}"
-
+    if [[ ${#PART2[@]} -eq 0 ]]; then
+        echo "  FTP Link:                 ${FTPLINK}"
+    fi
 fi
 
 # Space Usage
@@ -200,4 +208,13 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
     echo "  Database User Name:       ${DBUSER}"
     echo "  Database Password:        ${DBPASS}"
 
+fi
+
+if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
+    for P1 in "${PART1[@]}"; do
+        echo "${!P1}"
+    done
+    for P2 in "${PART2[@]}"; do
+        echo "${!P2}"
+    done
 fi
