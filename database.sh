@@ -2,7 +2,7 @@
 
 BASH="/bin/bash"
 PWD="`pwd`"
-INFO_SH="$PWD/info.sh"
+INFO_SH="info.sh"
 MYSQLDUMP_TPL="mysqldump.tpl"
 
 CURL=$(which curl)
@@ -12,7 +12,30 @@ if [[ ${#CURL} -eq 0 ]]; then
     exit 1
 fi
 
-INFO=(`$BASH "$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp`)
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -b|--backup)
+            shift
+            TODO="BACKUP"
+            ;;
+        -o|--output)
+			shift
+            if [[ $# -gt 0 ]]; then
+                OUTPUT_FILE=$1
+                shift
+            fi
+			;;
+        -d|--drop|--delete)
+            shift
+            TODO="DROP"
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp`)
 
 if [[ $? -ne 0 ]]; then
 	echo "[Error] $INFO_SH : ${INFO[@]}"
