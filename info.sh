@@ -8,6 +8,8 @@ USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)"
 USER_AGENT="${USER_AGENT} AppleWebKit/537.31 (KHTML, like Gecko)"
 USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
+QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
+
 extract_value_of()
 {
     RESULT=${!3%%\"${1}\"*}
@@ -33,7 +35,7 @@ get_value_from()
 
 # Basic Info
 
-INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexInfo" \
+INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
@@ -74,7 +76,7 @@ echo "  Programming Languages:    ${SCRIPTS}"
 
 # FTP Link
 
-FTPLINK=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetWebFtpUrl" \
+FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
@@ -83,7 +85,7 @@ echo "  FTP Link:                 ${FTPLINK}"
 
 # Space Usage
 
-INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexSpaceDiv" \
+INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexSpaceDiv" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
@@ -93,7 +95,7 @@ echo "  Space Usage:              ${SPACEUSED}"
 
 # Bandwidth Usage
 
-INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexFlowDiv" \
+INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexFlowDiv" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
@@ -103,7 +105,7 @@ echo "  Bandwidth Usage:          ${BWUSED}"
 
 # Database Name and PhpMyAdmin URL
 
-INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetDBList" \
+INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
