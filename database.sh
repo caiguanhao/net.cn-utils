@@ -12,6 +12,9 @@ if [[ ${#CURL} -eq 0 ]]; then
     exit 1
 fi
 
+OUTPUT_FILE="-"
+VERBOSE=""
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -b|--backup)
@@ -19,15 +22,19 @@ while [[ $# -gt 0 ]]; do
             TODO="BACKUP"
             ;;
         -o|--output)
-			shift
+            shift
             if [[ $# -gt 0 ]]; then
-                OUTPUT_FILE=$1
+                OUTPUT_FILE="$1"
                 shift
             fi
-			;;
+            ;;
         -d|--drop|--delete)
             shift
             TODO="DROP"
+            ;;
+        -v|--verbose)
+            shift
+            VERBOSE="-v"
             ;;
         *)
             break
@@ -38,8 +45,8 @@ done
 INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp`)
 
 if [[ $? -ne 0 ]]; then
-	echo "[Error] $INFO_SH : ${INFO[@]}"
-	exit 1
+    echo "[Error] $INFO_SH : ${INFO[@]}"
+    exit 1
 fi
 
 WEB=${INFO[0]}
@@ -57,6 +64,6 @@ sed "s/{{{DBNAME}}}/${DBN}/" | \
 sed "s/{{{HOST}}}/${DBH}/" | \
 sed "s/{{{USER}}}/${DBU}/" | \
 sed "s/{{{PASS}}}/${DBP}/" | \
-$CURL -s -T - "$FTP/htdocs/${FILE}"
+$CURL -s ${VERBOSE} -T - "$FTP/htdocs/${FILE}"
 
-$CURL -s -L "$WEB/$FILE"
+$CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
