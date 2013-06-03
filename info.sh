@@ -50,11 +50,11 @@ PART5_SHORT=(   -pma                            -dbn                        )
 PART5_LONG=(    --phpmyadmin-link               --database-name             )
 
 PART6=0
-PART6_VAR=(     DBSERVER                        DBUSER
+PART6_VAR=(     DBHOST                          DBUSER
                 DBPASS                                                      )
-PART6_SHORT=(   -dbs                            -dbu
+PART6_SHORT=(   -dbh                            -dbu
                 -dbp                                                        )
-PART6_LONG=(    --database-server               --database-username
+PART6_LONG=(    --database-host                 --database-username
                 --database-password                                         )
 
 SHOWHELP=0
@@ -139,7 +139,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
-    WEBLINK="http://${SITEID}.chinaw3.com/"
+    WEBLINK="http://${SITEID}.chinaw3.com"
 
     if [[ $PART1 -eq 0 ]]; then
         echo "Info for ${SITEID}:"
@@ -312,7 +312,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo
         echo "  -pma, --phpmyadmin-link      URL to log in to phpMyAdmin"
         echo "  -dbn, --database-name        Name of the database"
-        echo "  -dbs, --database-server      Host to connect"
+        echo "  -dbh, --database-host        Host to connect"
         echo "  -dbu, --database-username    Username to connect to database"
         echo "  -dbp, --database-password    Password to connect to database"
     fi

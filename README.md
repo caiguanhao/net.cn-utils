@@ -30,7 +30,7 @@ info.sh
 
       -pma, --phpmyadmin-link      URL to log in to phpMyAdmin
       -dbn, --database-name        Name of the database
-      -dbs, --database-server      Host to connect
+      -dbh, --database-host        Host to connect
       -dbu, --database-username    Username to connect to database
       -dbp, --database-password    Password to connect to database
 
