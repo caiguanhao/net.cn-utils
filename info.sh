@@ -77,3 +77,27 @@ INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexFlowDiv" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
 echo "  Bandwidth Usage:          ${INFO##*>}"
+
+INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetDBList" \
+-b "${PWD}/cookie" \
+-c "${PWD}/cookie" \
+-A "${USER_AGENT}" | iconv -f gbk`
+
+DELI="<td class='bian5'>"
+
+_INFO=${INFO%%${DELI}*}
+_INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
+
+echo "  Database Name:            ${_INFO%%<*}"
+
+INFO=${_INFO%%${DELI}*}
+_INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
+
+DELI="href='"
+
+INFO=${_INFO%%${DELI}*}
+_INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
+
+DBLINK=${_INFO%%\'*}
+
+echo "  PhpMyAdmin Link:          ${DBLINK}"
