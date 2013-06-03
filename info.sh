@@ -4,11 +4,18 @@ PWD="`pwd`"
 
 CURL=$(which curl)
 
+if [[ ${#CURL} -eq 0 ]]; then
+    echo "Install curl first."
+    exit 1
+fi
+
 USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)"
 USER_AGENT="${USER_AGENT} AppleWebKit/537.31 (KHTML, like Gecko)"
 USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
+
+NEED_LOGIN_AGIAN="Timeout. You need to log in again."
 
 ARGUMENTS_COUNT=$#
 
@@ -99,7 +106,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ $INFO != \{*\} ]]; then
-        echo "Timeout. You need to log in again."
+        echo $NEED_LOGIN_AGIAN
         exit 1
     fi
 
@@ -144,6 +151,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
+    if [[ ${#FTPLINK} -eq 0 ]] || [[ $FTPLINK == -1* ]]; then
+        echo $NEED_LOGIN_AGIAN
+        exit 1
+    fi
+
     if [[ $PART2 -eq 0 ]]; then
         echo "  FTP Link:                 ${FTPLINK}"
     fi
@@ -157,6 +169,12 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
+
+    if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
+        echo $NEED_LOGIN_AGIAN
+        exit 1
+    fi
+
     SPACEUSED=${INFO##*&nbsp;}
 
     if [[ $PART3 -eq 0 ]]; then
@@ -172,6 +190,12 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
+
+    if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
+        echo $NEED_LOGIN_AGIAN
+        exit 1
+    fi
+
     BWUSED=${INFO##*>}
 
     if [[ $PART4 -eq 0 ]]; then
@@ -188,6 +212,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]; the
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
+
+    if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
+        echo $NEED_LOGIN_AGIAN
+        exit 1
+    fi
 
     DELI="<td class='bian5'>"
 
@@ -213,6 +242,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]; the
 
     if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
 
+        if [[ ${#DBLINK} -eq 0 ]]; then
+            echo $NEED_LOGIN_AGIAN
+            exit 1
+        fi
+
         IFS=$'\r'
 
         PMA=`$CURL -s -L "${DBLINK}" \
@@ -236,6 +270,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]; the
         fi
     fi
 fi
+
+# Output specified info only
 
 if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
     for ARG in "${ARGUMENTS[@]}"; do
