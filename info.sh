@@ -57,6 +57,8 @@ PART6_SHORT=(   -dbs                            -dbu
 PART6_LONG=(    --database-server               --database-username
                 --database-password                                         )
 
+SHOWHELP=0
+
 for (( i = 1; i <= $#; i++ )); do
     for (( j = 1; j <= 6; j++ )); do
         SHORT="PART${j}_SHORT[@]"
@@ -71,7 +73,14 @@ for (( i = 1; i <= $#; i++ )); do
             fi
         done
     done
+    if [[ ${@:$i:1} == "-h" ]] || [[ ${@:$i:1} == "--help" ]]; then
+        SHOWHELP=1
+    fi
 done
+
+if [[ $SHOWHELP -eq 1 ]]; then
+    ARGUMENTS=()
+fi
 
 extract_value_of()
 {
@@ -206,7 +215,8 @@ fi
 # Database Name and PhpMyAdmin URL
 # Database Server, User Name, Password
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]
+then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
     -b "${PWD}/cookie" \
@@ -274,7 +284,32 @@ fi
 # Output specified info only
 
 if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
-    for ARG in "${ARGUMENTS[@]}"; do
-        echo "${!ARG}"
-    done
+    if [[ ${#ARGUMENTS[@]} -gt 0 ]]; then
+        for ARG in "${ARGUMENTS[@]}"; do
+            echo "${!ARG}"
+        done
+    else
+        echo "Usage: login.sh [OPTIONS/ITEMS...]"
+        echo "Options:"
+        echo "  -h, --help                   Show this help and exit"
+        echo "Items:"
+        echo "  -t, --type                   Type of virtual space"
+        echo "  -vf, --valid-from            Start date of the bill"
+        echo "  -vt, --valid-to              End date of the bill"
+        echo "  -s, --status                 Status text of system"
+        echo "  -ip, --ip-address            IP Address of virtual space"
+        echo "  -os, --system                Name of the operating system"
+        echo -n "  -l, --languages              "
+        echo "List of programming languages installed"
+        echo
+        echo "  -ftp, --ftp-link             FTP link to the server"
+        echo "  -sp, --space-usage           Total space used"
+        echo "  -bw, --bandwidth-usage       Bandwidth used in this month"
+        echo
+        echo "  -pma, --phpmyadmin-link      URL to log in to phpMyAdmin"
+        echo "  -dbn, --database-name        Name of the database"
+        echo "  -dbs, --database-server      Host to connect"
+        echo "  -dbu, --database-username    Username to connect to database"
+        echo "  -dbp, --database-password    Password to connect to database"
+    fi
 fi
