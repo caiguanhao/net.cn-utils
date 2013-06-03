@@ -56,3 +56,24 @@ echo "  Status:                   ${STATUS}"
 echo "  IP Address:               ${SITEIP}"
 echo "  Operating System:         ${OSNAME}"
 echo "  Programming Languages:    ${SCRIPTS}"
+
+INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetWebFtpUrl" \
+-b "${PWD}/cookie" \
+-c "${PWD}/cookie" \
+-A "${USER_AGENT}" | iconv -f gbk`
+
+echo "  FTP Link:                 ${INFO}"
+
+INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexSpaceDiv" \
+-b "${PWD}/cookie" \
+-c "${PWD}/cookie" \
+-A "${USER_AGENT}" | iconv -f gbk`
+
+echo "  Space Usage:              ${INFO##*&nbsp;}"
+
+INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexFlowDiv" \
+-b "${PWD}/cookie" \
+-c "${PWD}/cookie" \
+-A "${USER_AGENT}" | iconv -f gbk`
+
+echo "  Bandwidth Usage:          ${INFO##*>}"
