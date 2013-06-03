@@ -12,6 +12,38 @@ QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
 ARGUMENTS_COUNT=$#
 
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -t|--type|-vf|--valid-from|-vt|--valid-to|-s|--status|-ip|--ip-address|-os|--system|-l|--languages)
+            PART1=1
+            shift
+            ;;
+        -ftp|--ftp-link)
+            PART2=1
+            shift
+            ;;
+        -sp|--space-usagae)
+            PART3=1
+            shift
+            ;;
+        -bw|--bandwidth-usagae)
+            PART4=1
+            shift
+            ;;
+        -pma|--phpmyadmin-link|-dbn|--database-name)
+            PART5=1
+            shift
+            ;;
+        -dbs|--database-server|-dbu|--database-username|-dbp|--database-password)
+            PART6=1
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 extract_value_of()
 {
     RESULT=${!3%%\"${1}\"*}
@@ -37,37 +69,38 @@ get_value_from()
 
 # Basic Info
 
-INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}" | iconv -f gbk`
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
-if [[ $INFO != \{*\} ]]; then
-    echo "Timeout. You need to log in again."
-    exit 1
-fi
+    INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}" | iconv -f gbk`
 
-extract_value_of Opendate   from INFO to OPENDATE
-OPENDATE=$(grep -oE "[0-9]{1,}" <<< "$OPENDATE")
-OPENDATE=$(date -r "${OPENDATE%000}" "+%Y-%m-%d %H:%M:%S")
+    if [[ $INFO != \{*\} ]]; then
+        echo "Timeout. You need to log in again."
+        exit 1
+    fi
 
-extract_value_of Enddate    from INFO to ENDDATE
-ENDDATE=$(grep -oE "[0-9]{1,}" <<< "$ENDDATE")
-ENDDATE=$(date -r "${ENDDATE%000}" "+%Y-%m-%d %H:%M:%S")
+    extract_value_of Opendate   from INFO to OPENDATE
+    OPENDATE=$(grep -oE "[0-9]{1,}" <<< "$OPENDATE")
+    OPENDATE=$(date -r "${OPENDATE%000}" "+%Y-%m-%d %H:%M:%S")
 
-extract_value_of Siteid     from INFO to SITEID
+    extract_value_of Enddate    from INFO to ENDDATE
+    ENDDATE=$(grep -oE "[0-9]{1,}" <<< "$ENDDATE")
+    ENDDATE=$(date -r "${ENDDATE%000}" "+%Y-%m-%d %H:%M:%S")
 
-extract_value_of Siteip     from INFO to SITEIP
+    extract_value_of Siteid     from INFO to SITEID
 
-extract_value_of Typename   from INFO to TYPENAME
+    extract_value_of Siteip     from INFO to SITEIP
 
-extract_value_of Osname     from INFO to OSNAME
+    extract_value_of Typename   from INFO to TYPENAME
 
-extract_value_of Scriptlist from INFO to SCRIPTS
+    extract_value_of Osname     from INFO to OSNAME
 
-extract_value_of Statusname from INFO to STATUS
+    extract_value_of Scriptlist from INFO to SCRIPTS
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    extract_value_of Statusname from INFO to STATUS
+
     echo "Info for ${SITEID}:"
     echo "  Product Type:             ${TYPENAME}"
     echo "  Valid From:               ${OPENDATE}"
@@ -80,88 +113,98 @@ fi
 
 # FTP Link
 
-FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}" | iconv -f gbk`
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}" | iconv -f gbk`
+
     echo "  FTP Link:                 ${FTPLINK}"
+
 fi
 
 # Space Usage
 
-INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexSpaceDiv" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}" | iconv -f gbk`
-SPACEUSED=${INFO##*&nbsp;}
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexSpaceDiv" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}" | iconv -f gbk`
+    SPACEUSED=${INFO##*&nbsp;}
+
     echo "  Space Usage:              ${SPACEUSED}"
+
 fi
 
 # Bandwidth Usage
 
-INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexFlowDiv" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}" | iconv -f gbk`
-BWUSED=${INFO##*>}
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexFlowDiv" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}" | iconv -f gbk`
+    BWUSED=${INFO##*>}
+
     echo "  Bandwidth Usage:          ${BWUSED}"
+
 fi
 
 # Database Name and PhpMyAdmin URL
 
-INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}" | iconv -f gbk`
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]]; then
 
-DELI="<td class='bian5'>"
+    INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}" | iconv -f gbk`
 
-_INFO=${INFO%%${DELI}*}
-_INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
+    DELI="<td class='bian5'>"
 
-DBNAME=${_INFO%%<*}
+    _INFO=${INFO%%${DELI}*}
+    _INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
 
-INFO=${_INFO%%${DELI}*}
-_INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
+    DBNAME=${_INFO%%<*}
 
-DELI="href='"
+    INFO=${_INFO%%${DELI}*}
+    _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
 
-INFO=${_INFO%%${DELI}*}
-_INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
+    DELI="href='"
 
-DBLINK=${_INFO%%\'*}
+    INFO=${_INFO%%${DELI}*}
+    _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    DBLINK=${_INFO%%\'*}
+
     echo "  PhpMyAdmin Link:          ${DBLINK}"
     echo "  Database Name:            ${DBNAME}"
+
 fi
 
 # Database Server, User Name, Password
 
-IFS=$'\r'
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
 
-PMA=`$CURL -s -L "${DBLINK}" \
--b "${PWD}/cookie" \
--c "${PWD}/cookie" \
--A "${USER_AGENT}"`
+    IFS=$'\r'
 
-get_value_from PMA starting_from 'id="input_servername"'
-DBSERVER=${PMA%%\"*}
+    PMA=`$CURL -s -L "${DBLINK}" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -A "${USER_AGENT}"`
 
-get_value_from PMA starting_from 'id="input_username"'
-DBUSER=${PMA%%\"*}
+    get_value_from PMA starting_from 'id="input_servername"'
+    DBSERVER=${PMA%%\"*}
 
-get_value_from PMA starting_from 'id="input_password"'
-DBPASS=${PMA%%\"*}
+    get_value_from PMA starting_from 'id="input_username"'
+    DBUSER=${PMA%%\"*}
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]]; then
+    get_value_from PMA starting_from 'id="input_password"'
+    DBPASS=${PMA%%\"*}
+
     echo "  Database Server:          ${DBSERVER}"
     echo "  Database User Name:       ${DBUSER}"
     echo "  Database Password:        ${DBPASS}"
+
 fi
