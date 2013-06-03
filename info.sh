@@ -180,8 +180,9 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
 fi
 
 # Database Name and PhpMyAdmin URL
+# Database Server, User Name, Password
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
     -b "${PWD}/cookie" \
@@ -205,36 +206,34 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]]; then
 
     DBLINK=${_INFO%%\'*}
 
-    if [[ $PART5 -eq 0 ]]; then
+    if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
         echo "  PhpMyAdmin Link:          ${DBLINK}"
         echo "  Database Name:            ${DBNAME}"
     fi
-fi
 
-# Database Server, User Name, Password
+    if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
+        IFS=$'\r'
 
-    IFS=$'\r'
+        PMA=`$CURL -s -L "${DBLINK}" \
+        -b "${PWD}/cookie" \
+        -c "${PWD}/cookie" \
+        -A "${USER_AGENT}"`
 
-    PMA=`$CURL -s -L "${DBLINK}" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
-    -A "${USER_AGENT}"`
+        get_value_from PMA starting_from 'id="input_servername"'
+        DBSERVER=${PMA%%\"*}
 
-    get_value_from PMA starting_from 'id="input_servername"'
-    DBSERVER=${PMA%%\"*}
+        get_value_from PMA starting_from 'id="input_username"'
+        DBUSER=${PMA%%\"*}
 
-    get_value_from PMA starting_from 'id="input_username"'
-    DBUSER=${PMA%%\"*}
+        get_value_from PMA starting_from 'id="input_password"'
+        DBPASS=${PMA%%\"*}
 
-    get_value_from PMA starting_from 'id="input_password"'
-    DBPASS=${PMA%%\"*}
-
-    if [[ $PART6 -eq 0 ]]; then
-        echo "  Database Server:          ${DBSERVER}"
-        echo "  Database User Name:       ${DBUSER}"
-        echo "  Database Password:        ${DBPASS}"
+        if [[ $PART6 -eq 0 ]]; then
+            echo "  Database Server:          ${DBSERVER}"
+            echo "  Database User Name:       ${DBUSER}"
+            echo "  Database Password:        ${DBPASS}"
+        fi
     fi
 fi
 
