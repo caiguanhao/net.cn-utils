@@ -23,11 +23,11 @@ ARGUMENTS=()
 
 PART1=0
 PART1_VAR=(     TYPENAME        OPENDATE        ENDDATE         STATUS
-                SITEIP          OSNAME          SCRIPTS                     )
+                SITEIP          OSNAME          SCRIPTS         WEBLINK     )
 PART1_SHORT=(   -t              -vf             -vt             -s
-                -ip             -os             -l                          )
+                -ip             -os             -l              -web        )
 PART1_LONG=(    --type          --valid-from    --valid-to      --status
-                --ip-address    --system        --languages                 )
+                --ip-address    --system        --languages     --web-link  )
 
 PART2=0
 PART2_VAR=(     FTPLINK                                                     )
@@ -139,6 +139,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
+    WEBLINK="http://${SITEID}.chinaw3.com/"
+
     if [[ $PART1 -eq 0 ]]; then
         echo "Info for ${SITEID}:"
         echo "  Product Type:             ${TYPENAME}"
@@ -148,6 +150,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
         echo "  IP Address:               ${SITEIP}"
         echo "  Operating System:         ${OSNAME}"
         echo "  Programming Languages:    ${SCRIPTS}"
+        echo "  Web Link:                 ${WEBLINK}"
     fi
 fi
 
@@ -301,6 +304,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo "  -os, --system                Name of the operating system"
         echo -n "  -l, --languages              "
         echo "List of programming languages installed"
+        echo "  -web, --web-link             HTTP web link"
         echo
         echo "  -ftp, --ftp-link             FTP link to the server"
         echo "  -sp, --space-usage           Total space used"
