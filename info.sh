@@ -74,12 +74,12 @@ echo "  Programming Languages:    ${SCRIPTS}"
 
 # FTP Link
 
-INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetWebFtpUrl" \
+FTPLINK=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetWebFtpUrl" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
-echo "  FTP Link:                 ${INFO}"
+echo "  FTP Link:                 ${FTPLINK}"
 
 # Space Usage
 
@@ -87,8 +87,9 @@ INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexSpaceDiv" 
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
+SPACEUSED=${INFO##*&nbsp;}
 
-echo "  Space Usage:              ${INFO##*&nbsp;}"
+echo "  Space Usage:              ${SPACEUSED}"
 
 # Bandwidth Usage
 
@@ -96,8 +97,9 @@ INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexFlowDiv" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
+BWUSED=${INFO##*>}
 
-echo "  Bandwidth Usage:          ${INFO##*>}"
+echo "  Bandwidth Usage:          ${BWUSED}"
 
 # Database Name and PhpMyAdmin URL
 
@@ -137,10 +139,16 @@ PMA=`$CURL -s -L "${DBLINK}" \
 -A "${USER_AGENT}"`
 
 get_value_from PMA starting_from 'id="input_servername"'
-echo "  Database Server:          ${PMA%%\"*}"
+DBSERVER=${PMA%%\"*}
+
+echo "  Database Server:          ${DBSERVER}"
 
 get_value_from PMA starting_from 'id="input_username"'
-echo "  Database User Name:       ${PMA%%\"*}"
+DBUSER=${PMA%%\"*}
+
+echo "  Database User Name:       ${DBUSER}"
 
 get_value_from PMA starting_from 'id="input_password"'
-echo "  Database Password:        ${PMA%%\"*}"
+DBPASS=${PMA%%\"*}
+
+echo "  Database Password:        ${DBPASS}"
