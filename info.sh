@@ -216,7 +216,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
 fi
 
 # Database Name and PhpMyAdmin URL
-# Database Server, User Name, Password
+# Database Host, User Name, Password
 
 if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]
 then
@@ -268,7 +268,7 @@ then
         -A "${USER_AGENT}"`
 
         get_value_from PMA starting_from 'id="input_servername"'
-        DBSERVER=${PMA%%\"*}
+        DBHOST=${PMA%%\"*}
 
         get_value_from PMA starting_from 'id="input_username"'
         DBUSER=${PMA%%\"*}
@@ -277,7 +277,7 @@ then
         DBPASS=${PMA%%\"*}
 
         if [[ $PART6 -eq 0 ]]; then
-            echo "  Database Server:          ${DBSERVER}"
+            echo "  Database Host:            ${DBHOST}"
             echo "  Database User Name:       ${DBUSER}"
             echo "  Database Password:        ${DBPASS}"
         fi
