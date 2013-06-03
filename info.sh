@@ -12,7 +12,9 @@ QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
 ARGUMENTS_COUNT=$#
 
-PART1=()
+ARGUMENTS=()
+
+PART1=0
 PART1_VAR=(     TYPENAME        OPENDATE        ENDDATE         STATUS
                 SITEIP          OSNAME          SCRIPTS                     )
 PART1_SHORT=(   -t              -vf             -vt             -s
@@ -20,7 +22,7 @@ PART1_SHORT=(   -t              -vf             -vt             -s
 PART1_LONG=(    --type          --valid-from    --valid-to      --status
                 --ip-address    --system        --languages                 )
 
-PART2=()
+PART2=0
 PART2_VAR=(     FTPLINK                                                     )
 PART2_SHORT=(   -ftp                                                        )
 PART2_LONG=(    --ftp-link                                                  )
@@ -32,11 +34,10 @@ for (( i = 1; i <= $#; i++ )); do
         LONG="PART${j}_LONG[@]"
         LONG=(${!LONG})
         for (( k = 0; k < ${#SHORT[@]}; k++ )); do
-            if [[ ${SHORT[$k]} == ${@:$i:1} ]]; then
-                eval "PART${j}=(\${PART${j}[@]} \${PART${j}_VAR[$k]})"
-            fi
-            if [[ ${LONG[$k]} == ${@:$i:1} ]]; then
-                eval "PART${j}=(\${PART${j}[@]} \${PART${j}_VAR[$k]})"
+            if [[ ${SHORT[$k]} == ${@:$i:1} ]] || 
+               [[ ${LONG[$k]} == ${@:$i:1} ]]; then
+                eval "ARGUMENTS=(\${ARGUMENTS[@]} \${PART${j}_VAR[$k]})"
+                eval "PART${j}=1"
             fi
         done
     done
@@ -67,7 +68,7 @@ get_value_from()
 
 # Basic Info
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART1[@]} -gt 0 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
     -b "${PWD}/cookie" \
@@ -99,7 +100,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART1[@]} -gt 0 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
-    if [[ ${#PART1[@]} -eq 0 ]]; then
+    if [[ $PART1 -eq 0 ]]; then
         echo "Info for ${SITEID}:"
         echo "  Product Type:             ${TYPENAME}"
         echo "  Valid From:               ${OPENDATE}"
@@ -113,14 +114,14 @@ fi
 
 # FTP Link
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART2[@]} -eq 1 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
 
     FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
-    if [[ ${#PART2[@]} -eq 0 ]]; then
+    if [[ $PART2 -eq 0 ]]; then
         echo "  FTP Link:                 ${FTPLINK}"
     fi
 fi
@@ -211,10 +212,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
 fi
 
 if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
-    for P1 in "${PART1[@]}"; do
-        echo "${!P1}"
-    done
-    for P2 in "${PART2[@]}"; do
-        echo "${!P2}"
+    for ARG in "${ARGUMENTS[@]}"; do
+        echo "${!ARG}"
     done
 fi
