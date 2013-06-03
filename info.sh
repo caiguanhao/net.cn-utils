@@ -12,36 +12,23 @@ QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
 ARGUMENTS_COUNT=$#
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -t|--type|-vf|--valid-from|-vt|--valid-to|-s|--status|-ip|--ip-address|-os|--system|-l|--languages)
-            PART1=1
-            shift
-            ;;
-        -ftp|--ftp-link)
-            PART2=1
-            shift
-            ;;
-        -sp|--space-usagae)
-            PART3=1
-            shift
-            ;;
-        -bw|--bandwidth-usagae)
-            PART4=1
-            shift
-            ;;
-        -pma|--phpmyadmin-link|-dbn|--database-name)
-            PART5=1
-            shift
-            ;;
-        -dbs|--database-server|-dbu|--database-username|-dbp|--database-password)
-            PART6=1
-            shift
-            ;;
-        *)
-            break
-            ;;
-    esac
+PART1=()
+PART1_VAR=(     TYPENAME        OPENDATE        ENDDATE         STATUS
+                SITEIP          OSNAME          SCRIPTS                     )
+PART1_SHORT=(   -t              -vf             -vt             -s
+                -ip             -os             -l                          )
+PART1_LONG=(    --type          --valid-from    --valid-to      --status
+                --ip-address    --system        --languages                 )
+
+for (( i = 1; i <= $#; i++ )); do
+    for (( j = 0; j < ${#PART1_SHORT[@]}; j++ )); do
+        if [[ ${PART1_SHORT[$j]} == ${@:$i:1} ]]; then
+            PART1=(${PART1[@]} ${PART1_VAR[$j]})
+        fi
+        if [[ ${PART1_LONG[$j]} == ${@:$i:1} ]]; then
+            PART1=(${PART1[@]} ${PART1_VAR[$j]})
+        fi
+    done
 done
 
 extract_value_of()
@@ -69,7 +56,7 @@ get_value_from()
 
 # Basic Info
 
-if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ ${#PART1[@]} -gt 0 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
     -b "${PWD}/cookie" \
@@ -101,14 +88,20 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
-    echo "Info for ${SITEID}:"
-    echo "  Product Type:             ${TYPENAME}"
-    echo "  Valid From:               ${OPENDATE}"
-    echo "  Valid To:                 ${ENDDATE}"
-    echo "  Status:                   ${STATUS}"
-    echo "  IP Address:               ${SITEIP}"
-    echo "  Operating System:         ${OSNAME}"
-    echo "  Programming Languages:    ${SCRIPTS}"
+    if [[ ${#PART1[@]} -eq 0 ]]; then
+        echo "Info for ${SITEID}:"
+        echo "  Product Type:             ${TYPENAME}"
+        echo "  Valid From:               ${OPENDATE}"
+        echo "  Valid To:                 ${ENDDATE}"
+        echo "  Status:                   ${STATUS}"
+        echo "  IP Address:               ${SITEIP}"
+        echo "  Operating System:         ${OSNAME}"
+        echo "  Programming Languages:    ${SCRIPTS}"
+    else
+        for P1 in "${PART1[@]}"; do
+            echo "${!P1}"
+        done
+    fi
 fi
 
 # FTP Link
