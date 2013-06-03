@@ -88,7 +88,7 @@ DELI="<td class='bian5'>"
 _INFO=${INFO%%${DELI}*}
 _INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
 
-echo "  Database Name:            ${_INFO%%<*}"
+DBNAME=${_INFO%%<*}
 
 INFO=${_INFO%%${DELI}*}
 _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
@@ -101,3 +101,34 @@ _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
 DBLINK=${_INFO%%\'*}
 
 echo "  PhpMyAdmin Link:          ${DBLINK}"
+
+echo "  Database Name:            ${DBNAME}"
+
+get_value_from()
+{
+    DELI=$3
+
+    eval "_${1}=\${!1%%\${DELI}*}"
+    eval "_${1}=\${!1:\$(( \${#_${1}} + \${#DELI} ))}"
+
+    DELI='value="'
+
+    eval "${1}=\${_PMA%%\${DELI}*}"
+    eval "${1}=\${_PMA:\$(( \${#${1}} + \${#DELI} ))}"
+}
+
+IFS=$'\r'
+
+PMA=`$CURL -s -L "${DBLINK}" \
+-b "${PWD}/cookie" \
+-c "${PWD}/cookie" \
+-A "${USER_AGENT}"`
+
+get_value_from PMA starting_from 'id="input_servername"'
+echo "  Database Server:          ${PMA%%\"*}"
+
+get_value_from PMA starting_from 'id="input_username"'
+echo "  Database User Name:       ${PMA%%\"*}"
+
+get_value_from PMA starting_from 'id="input_password"'
+echo "  Database Password:        ${PMA%%\"*}"
