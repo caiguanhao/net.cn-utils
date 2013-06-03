@@ -18,6 +18,21 @@ extract_value_of()
     eval "${5}=\$RESULT"
 }
 
+get_value_from()
+{
+    DELI=$3
+
+    eval "_${1}=\${!1%%\${DELI}*}"
+    eval "_${1}=\${!1:\$(( \${#_${1}} + \${#DELI} ))}"
+
+    DELI='value="'
+
+    eval "${1}=\${_PMA%%\${DELI}*}"
+    eval "${1}=\${_PMA:\$(( \${#${1}} + \${#DELI} ))}"
+}
+
+# Basic Info
+
 INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexInfo" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
@@ -57,12 +72,16 @@ echo "  IP Address:               ${SITEIP}"
 echo "  Operating System:         ${OSNAME}"
 echo "  Programming Languages:    ${SCRIPTS}"
 
+# FTP Link
+
 INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetWebFtpUrl" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
 echo "  FTP Link:                 ${INFO}"
+
+# Space Usage
 
 INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexSpaceDiv" \
 -b "${PWD}/cookie" \
@@ -71,12 +90,16 @@ INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexSpaceDiv" 
 
 echo "  Space Usage:              ${INFO##*&nbsp;}"
 
+# Bandwidth Usage
+
 INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetIndexFlowDiv" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
 echo "  Bandwidth Usage:          ${INFO##*>}"
+
+# Database Name and PhpMyAdmin URL
 
 INFO=`$CURL -s -L "http://cp.hichina.com/AJAXPage.aspx?action=GetDBList" \
 -b "${PWD}/cookie" \
@@ -104,18 +127,7 @@ echo "  PhpMyAdmin Link:          ${DBLINK}"
 
 echo "  Database Name:            ${DBNAME}"
 
-get_value_from()
-{
-    DELI=$3
-
-    eval "_${1}=\${!1%%\${DELI}*}"
-    eval "_${1}=\${!1:\$(( \${#_${1}} + \${#DELI} ))}"
-
-    DELI='value="'
-
-    eval "${1}=\${_PMA%%\${DELI}*}"
-    eval "${1}=\${_PMA:\$(( \${#${1}} + \${#DELI} ))}"
-}
+# Database Server, User Name, Password
 
 IFS=$'\r'
 
