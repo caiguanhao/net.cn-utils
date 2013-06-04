@@ -17,14 +17,19 @@ TODO=""
 OUTPUT_FILE="-"
 VERBOSE=""
 
+NEW_TODO()
+{
+    if [[ ${#TODO} -gt 0 ]]; then
+        echo "One database action at a time." && exit 1
+    fi
+    TODO=$1
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -b|--backup)
             shift
-            if [[ ${#TODO} -gt 0 ]]; then
-                echo "One database action at a time." && exit 1
-            fi
-            TODO="BACKUP"
+            NEW_TODO BACKUP
             ;;
         -o|--output)
             shift
@@ -35,10 +40,15 @@ while [[ $# -gt 0 ]]; do
             ;;
         -d|--drop|--delete)
             shift
-            if [[ ${#TODO} -gt 0 ]]; then
-                echo "One database action at a time." && exit 1
+            NEW_TODO DROP
+            ;;
+        -i|-import|--import-sql)
+            shift
+            NEW_TODO IMPORT
+            if [[ $# -gt 0 ]]; then
+                SQL_INPUT="$1"
+                shift
             fi
-            TODO="DROP"
             ;;
         -v|--verbose)
             shift
@@ -50,7 +60,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp`)
+if [[ ${#TODO} -eq 0 ]]; then
+    echo "Help"
+    exit 0
+fi
+
+INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma`)
 
 if [[ $? -ne 0 ]]; then
     echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
@@ -63,6 +78,7 @@ DBN=${INFO[2]}
 DBH=${INFO[3]}
 DBU=${INFO[4]}
 DBP=${INFO[5]}
+PMA=${INFO[6]}
 
 if [[ $TODO == "BACKUP" ]]; then
 
@@ -117,6 +133,55 @@ elif [[ $TODO == "DROP" ]]; then
             exit 1
         fi
     done
+
+elif [[ $TODO == "IMPORT" ]]; then
+
+    PMA_INDEX=${PMA%%\?*}
+
+    echo -n "Logging into phpMyAdmin... "
+
+    IFS=$'\r'
+
+    PMA_RESULT=`$CURL -s ${VERBOSE} -L "${PMA_INDEX}" -X "POST" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -d "pma_servername=${DBH}" \
+    -d "pma_username=${DBU}" \
+    -d "pma_password=${DBP}"`
+
+    echo "Done"
+
+    if [[ ! $PMA_RESULT =~ token=[a-f0-9]{32} ]]; then
+        echo "[Error] ${PMA_INDEX} : Login failed!"
+        exit 1
+    fi
+
+    TOKEN=${PMA_RESULT%token=*}
+    TOKEN=${PMA_RESULT:$(( ${#TOKEN} + 6 )):32}
+
+    PMA_DIR=${PMA_INDEX%/*}
+
+    echo -n "Sending SQL queries... "
+
+    PMA_IMPORT=`$CURL -s ${VERBOSE} -L "${PMA_DIR}/import.php" -X "POST" \
+    -b "${PWD}/cookie" \
+    -c "${PWD}/cookie" \
+    -d "token=${TOKEN}" \
+    --data-urlencode "sql_query@${SQL_INPUT}"`
+
+    echo "Done"
+
+    if [[ $PMA_IMPORT != *\"notice\"* ]]; then
+        echo "[Exception] Response content does not contain any notices."
+        exit
+    fi
+
+    DELI='<div class="notice">'
+    NOTICE=${PMA_IMPORT%%${DELI}*}
+    NOTICE=${PMA_IMPORT:$(( ${#NOTICE} + ${#DELI} ))}
+    NOTICE=${NOTICE%%</div>*}
+
+    echo "phpMyAdmin says: ${NOTICE}."
 
 fi
 
