@@ -267,6 +267,22 @@ then
         -c "${PWD}/cookie" \
         -A "${USER_AGENT}"`
 
+        if [[ $PMA =~ token=[a-f0-9]{32} ]]; then # if logged in, log out.
+            _PMA=${PMA%token=*}
+            TOKEN=${PMA:$(( ${#_PMA} + 6 )):32}
+            PMA_INDEX=${DBLINK%%\?*}
+
+            PMA=`$CURL -s -L "${PMA_INDEX}?token=${TOKEN}&old_usr=foo" \
+            -b "${PWD}/cookie" \
+            -c "${PWD}/cookie" \
+            -A "${USER_AGENT}"`
+
+            PMA=`$CURL -s -L "${DBLINK}" \
+            -b "${PWD}/cookie" \
+            -c "${PWD}/cookie" \
+            -A "${USER_AGENT}"`
+        fi
+
         get_value_from PMA starting_from 'id="input_servername"'
         DBHOST=${PMA%%\"*}
 
