@@ -8,6 +8,7 @@ ZIP=$(which zip)
 EXTRACT=0
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
+INTERACTIVE=1
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
@@ -48,17 +49,29 @@ while [[ $# -gt 0 ]]; do
         -e|--extract)
             shift
             EXTRACT=1
-            if [[ $# -gt 0 ]] && [[ ${1##*\.} == "zip" ]]; then
-                EXTRACT_SRC="$1"
-                shift
+            if [[ $# -gt 0 ]]; then
+                if [[ ${1##*\.} == "zip" ]]; then
+                    EXTRACT_SRC="$1"
+                    shift
+                else
+                    echo "[Error] -e, --extract:"
+                    echo "[Error] You must specify the name of remote zip file."
+                    echo "[Error] Remove this option if you want to extract the zip file that will be uploaded."
+                    exit 1
+                fi
             fi
             ;;
         -d|--destination)
             shift
+            EXTRACT=1
             if [[ $# -gt 0 ]]; then
                 EXTRACT_DST="$1"
                 shift
             fi
+            ;;
+        -y|--assumeyes|-n|--non-interactive)
+            shift
+            INTERACTIVE=0
             ;;
         *)
             break
@@ -81,7 +94,7 @@ if [[ ${#FROM} -gt 0 ]]; then
         TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
         TMP_FILE="/tmp/$TMP_FILE.zip"
         echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
-        read
+        [ $INTERACTIVE -eq 1 ] && read
         $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
         FROM=$TMP_FILE
     fi
@@ -104,7 +117,7 @@ if [[ ${#FROM} -gt 0 ]]; then
     fi
 
     echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
-    read
+    [ $INTERACTIVE -eq 1 ] && read
 
     $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
 
@@ -152,7 +165,7 @@ if [[ $EXTRACT -eq 1 ]]; then
     -d "serverfilename=${EXTRACT_SRC}" \
     -d "serverdir=${EXTRACT_DST}" \
     -d "iscover=1" ...$NORMAL "[Enter/Ctrl-C] ?"
-    read
+    [ $INTERACTIVE -eq 1 ] && read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
