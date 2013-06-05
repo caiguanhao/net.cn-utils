@@ -47,6 +47,10 @@ while [[ $# -gt 0 ]]; do
             NEW_TODO IMPORT
             if [[ $# -gt 0 ]]; then
                 SQL_INPUT="$1"
+                if [[ ! -f $SQL_INPUT ]]; then
+                    echo "[Error] $SQL_INPUT : File does not exist."
+                    exit 1
+                fi
                 shift
             fi
             ;;
