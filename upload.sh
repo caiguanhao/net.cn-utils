@@ -48,6 +48,10 @@ while [[ $# -gt 0 ]]; do
         -e|--extract)
             shift
             EXTRACT=1
+            if [[ $# -gt 0 ]] && [[ ${1##*\.} == "zip" ]]; then
+                EXTRACT_SRC="$1"
+                shift
+            fi
             ;;
         *)
             break
@@ -64,49 +68,57 @@ fi
 
 FTP="${INFO[0]}${REMOTE_DIR}"
 
-TMP_FILE=""
-if [[ -d $FROM ]]; then
-    TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
-    TMP_FILE="/tmp/$TMP_FILE.zip"
-    echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
-    read
-    $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
-    FROM=$TMP_FILE
-fi
-
-if [[ ${TO:0:${#REMOTE_DIR}} == ${REMOTE_DIR} ]]; then
-    TO=${TO:${#REMOTE_DIR}}
-fi
-if [[ ${#TO} -gt 0 ]]; then
-    if [[ ${FROM##*\.} != ${TO##*\.} ]]; then
-        if [[ ${TO:(-1)} != "/" ]]; then
-            TO="${TO}/"
-        fi
-        TO="${TO}${FROM##*/}"
+if [[ ${#FROM} -gt 0 ]]; then
+    TMP_FILE=""
+    if [[ -d $FROM ]]; then
+        TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
+        TMP_FILE="/tmp/$TMP_FILE.zip"
+        echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
+        read
+        $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
+        FROM=$TMP_FILE
     fi
-else
-    TO=${FROM##*/}
+
+    if [[ ${TO:0:${#REMOTE_DIR}} == ${REMOTE_DIR} ]]; then
+        TO=${TO:${#REMOTE_DIR}}
+    fi
+    if [[ ${#TO} -gt 0 ]]; then
+        if [[ ${FROM##*\.} != ${TO##*\.} ]]; then
+            if [[ ${TO:(-1)} != "/" ]]; then
+                TO="${TO}/"
+            fi
+            TO="${TO}${FROM##*/}"
+        fi
+    else
+        TO=${FROM##*/}
+    fi
+    if [[ ${TO:0:1} != "/" ]]; then
+        TO="/${TO}"
+    fi
+
+    echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
+    read
+
+    $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
+
+    if [[ ${#TMP_FILE} -gt 0 ]]; then
+        rm -f "${TMP_FILE}"
+    fi
+
+    echo
 fi
-if [[ ${TO:0:1} != "/" ]]; then
-    TO="/${TO}"
-fi
-
-echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
-read
-
-$CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
-
-if [[ ${#TMP_FILE} -gt 0 ]]; then
-    rm -f "${TMP_FILE}"
-fi
-
-echo
 
 if [[ $EXTRACT -eq 1 ]]; then
 
-    if [[ ${#TO} -eq 0 ]]; then
+    if [[ ${#EXTRACT_SRC} -eq 0 ]]; then
+        EXTRACT_SRC=${TO}
+    fi
+    if [[ ${#EXTRACT_SRC} -eq 0 ]]; then
         echo "[Error] Fail to extract file: no input file."
         exit 1
+    fi
+    if [[ ${EXTRACT_SRC:0:1} != "/" ]]; then
+        EXTRACT_SRC="/${EXTRACT_SRC}"
     fi
 
     OUTPUT=`$CURL -s -G "http://cp.hichina.com/FileUncompressionold.aspx" \
@@ -127,14 +139,14 @@ if [[ $EXTRACT -eq 1 ]]; then
 
     echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
-    -d "serverfilename=${TO}" \
+    -d "serverfilename=${EXTRACT_SRC}" \
     -d "serverdir=/" \
     -d "iscover=1" ...$NORMAL "[Enter/Ctrl-C] ?"
     read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
-    -d "serverfilename=${TO}" \
+    -d "serverfilename=${EXTRACT_SRC}" \
     -d "serverdir=/" \
     -d "iscover=1" \
     -b "${PWD}/cookie" \
