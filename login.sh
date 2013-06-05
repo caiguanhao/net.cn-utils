@@ -49,7 +49,7 @@ if [[ ${#PASSWORD} -eq 0 ]]; then
     read PASSWORD
 fi
 
-USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)
+USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) \
 AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 rm -f "${PWD}/cookie"
