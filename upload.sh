@@ -6,6 +6,7 @@ INFO_SH="info.sh"
 REMOTE_DIR="/htdocs"
 ZIP=$(which zip)
 EXTRACT=0
+COLS=`tput cols`
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
 INTERACTIVE=1
@@ -28,7 +29,7 @@ USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)"
 USER_AGENT="${USER_AGENT} AppleWebKit/537.31 (KHTML, like Gecko)"
 USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
-help()
+HELP()
 {
     echo "Usage: $0 [OPTIONS...]"
     echo "Options:"
@@ -44,7 +45,17 @@ help()
     exit 0
 }
 
-[ $# -eq 0 ] && help
+INFORM()
+{
+    printf "\e[1;30;42m"
+    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    printf "${BOLD}%*s" $FRONT_SPACES
+    printf "${1}"
+    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${NORMAL}\n"
+}
+
+[ $# -eq 0 ] && HELP
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -102,7 +113,7 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=0
             ;;
         *)
-            help
+            HELP
             break
             ;;
     esac
@@ -120,6 +131,7 @@ FTP="${INFO[0]}"
 if [[ ${#FROM} -gt 0 ]]; then
     TMP_FILE=""
     if [[ -d $FROM ]]; then
+        INFORM "CREATING ARCHIVE"
         TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
         TMP_FILE="/tmp/$TMP_FILE.zip"
         echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
@@ -144,6 +156,8 @@ if [[ ${#FROM} -gt 0 ]]; then
     if [[ ${TO:0:1} != "/" ]]; then
         TO="/${TO}"
     fi
+
+    INFORM "UPLOADING FILE"
 
     echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
     [ $INTERACTIVE -eq 1 ] && read
@@ -189,6 +203,8 @@ if [[ $EXTRACT -eq 1 ]]; then
         exit 1
     fi
 
+    INFORM "EXTRACTING ARCHIVE"
+
     echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
     -d "serverfilename=${EXTRACT_SRC}" \
@@ -213,7 +229,7 @@ if [[ $EXTRACT -eq 1 ]]; then
     fi
 
     if [[ $KEEPARCHIVE -ne 1 ]]; then
-        echo
+        INFORM "DELETING ARCHIVE"
 
         echo $BOLD $ $CURL -s "${FTP}" \
         -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" $NORMAL "[Enter/Ctrl-C] ?"
