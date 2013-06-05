@@ -61,6 +61,14 @@
       -y, --assumeyes, -n, --non-interactive
                                    Execute commands without confirmations
 
+``listing.sh``
+--------------
+    Usage: listing.sh [OPTIONS...]
+    Options:
+      -h, --help                   Show this help and exit
+      -l, --list <path>            List of contents in path
+      -rm-rf, --remove-all         Delete everything on server
+
 ``Developer``
 -------------
 * ``caiguanhao``

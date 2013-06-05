@@ -8,6 +8,8 @@ COLS=`tput cols`
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
 REMOTE_DIR="/htdocs"
+TODO=""
+PATHTOLIST="/"
 
 CURL=$(which curl)
 
@@ -15,18 +17,6 @@ if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
     exit 1
 fi
-
-INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp`)
-
-if [[ $? -ne 0 ]]; then
-    echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
-    exit 1
-fi
-
-WEB=${INFO[0]}
-FTP=${INFO[1]}
-
-TODO=""
 
 NEW_TODO()
 {
@@ -46,7 +36,17 @@ WARN()
     printf "${NORMAL}\n"
 }
 
-PATHTOLIST="/"
+HELP()
+{
+    echo "Usage: $0 [OPTIONS...]"
+    echo "Options:"
+    echo "  -h, --help                   Show this help and exit"
+    echo "  -l, --list <path>            List of contents in path"
+    echo "  -rm-rf, --remove-all         Delete everything on server"
+    exit 0
+}
+
+[ $# -eq 0 ] && HELP
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -63,10 +63,21 @@ while [[ $# -gt 0 ]]; do
             NEW_TODO RMRF
             ;;
         *)
+            HELP
             break
             ;;
     esac
 done
+
+INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp`)
+
+if [[ $? -ne 0 ]]; then
+    echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
+    exit 1
+fi
+
+WEB=${INFO[0]}
+FTP=${INFO[1]}
 
 if [[ $TODO == "LIST" ]]; then
     if [[ ${PATHTOLIST:0:1} != "/" ]]; then
