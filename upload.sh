@@ -27,6 +27,23 @@ USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)"
 USER_AGENT="${USER_AGENT} AppleWebKit/537.31 (KHTML, like Gecko)"
 USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
+help()
+{
+    echo "Usage: upload.sh [OPTIONS...]"
+    echo "Options:"
+    echo "  -h, --help                  Show this help and exit"
+    echo "  -f, -from <file>            File to upload, directory will be compressed as zip file"
+    echo "  -t, --to <path>             Remote path relative to ${REMOTE_DIR}"
+    echo "  -e, --extract <file.zip>    Remote zip file to extract"
+    echo "  -d, --destination <path>    Extract files to path"
+    echo "  -s, --no-overwrite          Do not overwrite existing files"
+    echo "  -y, --assumeyes,"
+    echo "  -n, --non-interactive       Execute commands without confirmations"
+    exit 0
+}
+
+[ $# -eq 0 ] && help
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -f|--from)
@@ -70,7 +87,7 @@ while [[ $# -gt 0 ]]; do
                 shift
             fi
             ;;
-        --no-overwrite)
+        -s|--no-overwrite)
             shift
             OVERWRITE=0
             ;;
@@ -79,6 +96,7 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=0
             ;;
         *)
+            help
             break
             ;;
     esac

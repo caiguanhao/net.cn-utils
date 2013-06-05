@@ -45,6 +45,19 @@ database.sh
       -i, --import <file>     Import and execute SQL queries
       -v, --verbose           Show more status if possible
 
+upload.sh
+---------
+    Usage: upload.sh [OPTIONS...]
+    Options:
+      -h, --help                  Show this help and exit
+      -f, -from <file>            File to upload, directory will be compressed as zip file
+      -t, --to <path>             Remote path relative to /htdocs
+      -e, --extract <file.zip>    Remote zip file to extract
+      -d, --destination <path>    Extract files to path
+      -s, --no-overwrite          Do not overwrite existing files
+      -y, --assumeyes,
+      -n, --non-interactive       Execute commands without confirmations
+
 Developer
 ---------
 * caiguanhao
