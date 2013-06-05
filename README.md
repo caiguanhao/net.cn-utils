@@ -33,6 +33,9 @@
       -dbu, --database-username    Username to connect to database
       -dbp, --database-password    Password to connect to database
 
+      -cftp, --ftp-mirror          Command to download all files
+      -csql, --mysqldump           Command to backup database
+
 ``database.sh``
 ---------------
     Usage: database.sh [OPTIONS...]

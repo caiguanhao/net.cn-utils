@@ -30,9 +30,9 @@ PART1_LONG=(    --type          --valid-from    --valid-to      --status
                 --ip-address    --system        --languages     --web-link  )
 
 PART2=0
-PART2_VAR=(     FTPLINK                                                     )
-PART2_SHORT=(   -ftp                                                        )
-PART2_LONG=(    --ftp-link                                                  )
+PART2_VAR=(     FTPLINK         FTPMIRROR                                   )
+PART2_SHORT=(   -ftp            -cftp                                       )
+PART2_LONG=(    --ftp-link      --ftp-mirror                                )
 
 PART3=0
 PART3_VAR=(     SPACEUSED                                                   )
@@ -51,11 +51,11 @@ PART5_LONG=(    --phpmyadmin-link               --database-name             )
 
 PART6=0
 PART6_VAR=(     DBHOST                          DBUSER
-                DBPASS                                                      )
+                DBPASS                          MYSQLDUMP                   )
 PART6_SHORT=(   -dbh                            -dbu
-                -dbp                                                        )
+                -dbp                            -csql                       )
 PART6_LONG=(    --database-host                 --database-username
-                --database-password                                         )
+                --database-password             --mysqldump                 )
 
 SHOWHELP=0
 
@@ -168,8 +168,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
         exit 1
     fi
 
+    FTPMIRROR="lftp ${FTPLINK} -e \"mirror --continue --parallel=10 /htdocs `echo ~`/FTP\""
+
     if [[ $PART2 -eq 0 ]]; then
         echo "  FTP Link:                 ${FTPLINK}"
+        echo "  FTP Mirror Command:       ${FTPMIRROR}"
     fi
 fi
 
@@ -292,10 +295,13 @@ then
         get_value_from PMA starting_from 'id="input_password"'
         DBPASS=${PMA%%\"*}
 
+        MYSQLDUMP="mysqldump --set-gtid-purged=OFF -v -h ${DBHOST} -u ${DBUSER} -p'${DBPASS}' ${DBNAME} > ${DBNAME}@`date +'%Y%m%d%H%M%S'`.sql"
+
         if [[ $PART6 -eq 0 ]]; then
             echo "  Database Host:            ${DBHOST}"
             echo "  Database User Name:       ${DBUSER}"
             echo "  Database Password:        ${DBPASS}"
+            echo "  MySQL Backup Command:     ${MYSQLDUMP}"
         fi
     fi
 fi
@@ -329,5 +335,8 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo "  -dbh, --database-host        Host to connect"
         echo "  -dbu, --database-username    Username to connect to database"
         echo "  -dbp, --database-password    Password to connect to database"
+        echo
+        echo "  -cftp, --ftp-mirror          Command to download all files"
+        echo "  -csql, --mysqldump           Command to backup database"
     fi
 fi
