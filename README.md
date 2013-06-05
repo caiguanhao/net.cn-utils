@@ -1,5 +1,6 @@
 ``NET.CN Utils``
 ================
+**``Make your NET.CN's virtual space suck less.``**
 
 ``login.sh``
 ------------
@@ -70,6 +71,37 @@
       -l, --list <path>            List of contents in path
       -rm-rf, --remove-all         Delete everything on server
 
+``Examples``
+------------
+    # Login
+    $ bash login.sh -u hmu123456 -p 12345678
+      [OK] You are now logged in.
+
+    # Get server info
+    $ bash info.sh -csql -cftp -web -dbn
+      mysqldump --set-gtid-purged=OFF -v -h "hdm-070.hichina.com" -u "hdm0700300" -p"1234567890" "hdm0700300_db" > hdm0700300_db@20130606000000.sql
+      lftp "ftp://hmu123456:12345678@123.132.111.213" -e "mirror --continue --parallel=10 /htdocs /Users/caiguanhao/FTP"
+      http://hmu123456.chinaw3.com
+      hdm0700300_db
+
+    # Backup MySQL Database
+    $ bash database.sh --backup my.sql
+
+    # Drop all tables in database
+    $ bash database.sh --drop
+      Found 80 tables.
+                   WARNING: ALL DATA IN DATABASE WILL BE REMOVED!               
+      THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP. 
+      Start dropping tables in 0 seconds... Ctrl-C to cancel.
+      Dropping table my_table_01 [1/80] ... Done
+      ...
+
+    # Import backup
+    $ bash database.sh --import my.sql
+      Logging into phpMyAdmin... Done
+      Sending SQL queries... Done
+      phpMyAdmin says: Your SQL query has been executed successfully.
+
 ``Requirements``
 ----------------
 |               |``curl``|``mysql``|``zip``|
@@ -79,6 +111,13 @@
 |``database.sh``| ``X``  | ``X``   |       |
 |``upload.sh``  | ``X``  |         | ``X`` |
 |``listing.sh`` | ``X``  |         |       |
+
+``Specs``
+---------
+    Basic specs of NET.CN's Virtual space products:
+    M2 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite / 500 MB Space
+    M3 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite/MySQL / 1 GB Space
+    Admin panel: FTP, online ZIP decompression, phpMyAdmin with queued MySQL backup.
 
 ``Developer``
 -------------
