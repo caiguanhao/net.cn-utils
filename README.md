@@ -1,6 +1,6 @@
 ``NET.CN Utils``
 ================
-**``Make your NET.CN virtual space suck less and SAVE lots of time.``**
+**``Make your NET.CN virtual hosting suck less and SAVE lots of time.``**
 
 ``login.sh``
 ------------
@@ -16,11 +16,11 @@
     Options:
       -h, --help                   Show this help and exit
     Items:
-      -t, --type                   Type of virtual space
+      -t, --type                   Type of virtual hosting
       -vf, --valid-from            Start date of the bill
       -vt, --valid-to              End date of the bill
       -s, --status                 Status text of system
-      -ip, --ip-address            IP Address of virtual space
+      -ip, --ip-address            IP Address of virtual hosting
       -os, --system                Name of the operating system
       -l, --languages              List of languages installed
       -web, --web-link             HTTP web link
@@ -141,7 +141,7 @@
 
 ``Specs``
 ---------
-    Basic specs of NET.CN's Virtual space products:
+    Basic specs of NET.CN's virtual hosting products:
     M2 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite / 500 MB Space
     M3 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite/MySQL / 1 GB Space
     Admin panel: FTP, online ZIP decompression, phpMyAdmin with queued MySQL backup.
