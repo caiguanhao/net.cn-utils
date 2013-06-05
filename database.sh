@@ -77,14 +77,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
-    echo "Usage: database.sh [OPTIONS...]"
+    echo "Usage: $0 [OPTIONS...]"
     echo "Options:"
-    echo "  -h, --help              Show this help and exit"
-    echo "  -al, -la, --list-all    List all tables in database"
-    echo "  -b, --backup <file>     Backup database to file"
-    echo "  -d, --drop, --delete    Drop all tables in database"
-    echo "  -i, --import <file>     Import and execute SQL queries"
-    echo "  -v, --verbose           Show more status if possible"
+    echo "  -h, --help                   Show this help and exit"
+    echo "  -al, -la, --list-all         List all tables in database"
+    echo "  -b, --backup <file>          Backup database to file"
+    echo "  -d, --drop, --delete         Drop all tables in database"
+    echo "  -i, --import <file>          Import and execute SQL queries"
+    echo "  -v, --verbose                Show more status if possible"
     exit 0
 fi
 

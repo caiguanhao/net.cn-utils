@@ -29,16 +29,16 @@ USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
 
 help()
 {
-    echo "Usage: upload.sh [OPTIONS...]"
+    echo "Usage: $0 [OPTIONS...]"
     echo "Options:"
-    echo "  -h, --help                  Show this help and exit"
-    echo "  -f, -from <file>            File to upload, directory will be compressed as zip file"
-    echo "  -t, --to <path>             Remote path relative to ${REMOTE_DIR}"
-    echo "  -e, --extract <file.zip>    Remote zip file to extract"
-    echo "  -d, --destination <path>    Extract files to path"
-    echo "  -s, --no-overwrite          Do not overwrite existing files"
-    echo "  -y, --assumeyes,"
-    echo "  -n, --non-interactive       Execute commands without confirmations"
+    echo "  -h, --help                   Show this help and exit"
+    echo "  -f, -from <file>             File to upload, directory will be compressed as zip file"
+    echo "  -t, --to <path>              Remote path relative to ${REMOTE_DIR}"
+    echo "  -e, --extract <file.zip>     Remote zip file to extract"
+    echo "  -d, --destination <path>     Extract files to path"
+    echo "  -s, --no-overwrite           Do not overwrite existing files"
+    echo "  -y, --assumeyes, -n, --non-interactive"
+    echo "                               Execute commands without confirmations"
     exit 0
 }
 

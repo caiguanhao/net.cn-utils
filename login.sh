@@ -12,11 +12,11 @@ fi
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -h|--help)
-            echo "Usage: login.sh [OPTIONS...]"
+            echo "Usage: $0 [OPTIONS...]"
             echo "Options:"
-            echo "  -h, --help          Show this help and exit"
-            echo "  -u, --username      Log in with this user name"
-            echo "  -p, --password      Log in with this password"
+            echo "  -h, --help                   Show this help and exit"
+            echo "  -u, --username <username>    Log in with this user name"
+            echo "  -p, --password <password>    Log in with this password"
             exit 0
             ;;
         -u|--username)

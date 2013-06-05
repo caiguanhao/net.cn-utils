@@ -308,7 +308,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
             echo "${!ARG}"
         done
     else
-        echo "Usage: login.sh [OPTIONS/ITEMS...]"
+        echo "Usage: $0 [OPTIONS/ITEMS...]"
         echo "Options:"
         echo "  -h, --help                   Show this help and exit"
         echo "Items:"
@@ -318,10 +318,8 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo "  -s, --status                 Status text of system"
         echo "  -ip, --ip-address            IP Address of virtual space"
         echo "  -os, --system                Name of the operating system"
-        echo -n "  -l, --languages              "
-        echo "List of programming languages installed"
+        echo "  -l, --languages              List of languages installed"
         echo "  -web, --web-link             HTTP web link"
-        echo
         echo "  -ftp, --ftp-link             FTP link to the server"
         echo "  -sp, --space-usage           Total space used"
         echo "  -bw, --bandwidth-usage       Bandwidth used in this month"
