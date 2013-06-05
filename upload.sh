@@ -6,6 +6,8 @@ INFO_SH="info.sh"
 REMOTE_DIR="/htdocs"
 ZIP=$(which zip)
 EXTRACT=0
+BOLD=`tput bold`
+NORMAL=`tput sgr0`
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
@@ -66,8 +68,7 @@ TMP_FILE=""
 if [[ -d $FROM ]]; then
     TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
     TMP_FILE="/tmp/$TMP_FILE.zip"
-    echo "$FROM will be compressed as ZIP file. [Enter]: Yes; [Ctrl-C]: No."
-    echo $ZIP -9 -q -r "${TMP_FILE}" "$FROM"
+    echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
     read
     $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
     FROM=$TMP_FILE
@@ -90,8 +91,7 @@ if [[ ${TO:0:1} != "/" ]]; then
     TO="/${TO}"
 fi
 
-echo "Is this command OK? [Enter]: Yes; [Ctrl-C]: No."
-echo -n $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
+echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
 read
 
 $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
@@ -99,6 +99,8 @@ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
 if [[ ${#TMP_FILE} -gt 0 ]]; then
     rm -f "${TMP_FILE}"
 fi
+
+echo
 
 if [[ $EXTRACT -eq 1 ]]; then
 
@@ -123,7 +125,11 @@ if [[ $EXTRACT -eq 1 ]]; then
         exit 1
     fi
 
-    echo "${TO} will be extracted to / . Enter to continue. Ctrl-C tp cancel."
+    echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
+    -d "action=uncommpressfilesold" \
+    -d "serverfilename=${TO}" \
+    -d "serverdir=/" \
+    -d "iscover=1" ...$NORMAL "[Enter/Ctrl-C] ?"
     read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
@@ -137,6 +143,7 @@ if [[ $EXTRACT -eq 1 ]]; then
 
     if [[ $OUTPUT == *200\|OK* ]]; then
         echo "[OK] File has been successfully extracted."
+        exit 0
     else
         echo "[Error] Fail to extract file. Message: $OUTPUT"
         exit 1
