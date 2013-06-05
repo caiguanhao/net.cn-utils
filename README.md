@@ -39,6 +39,7 @@ database.sh
     Usage: database.sh [OPTIONS...]
     Options:
       -h, --help              Show this help and exit
+      -al, -la, --list-all    List all tables in database
       -b, --backup <file>     Backup database to file
       -d, --drop, --delete    Drop all tables in database
       -i, --import <file>     Import and execute SQL queries

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BASH="/bin/bash"
 PWD="`pwd`"
 INFO_SH="info.sh"
 MYSQLDUMP_TPL="mysqldump.tpl"
@@ -10,6 +9,13 @@ CURL=$(which curl)
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
+    exit 1
+fi
+
+MYSQL=$(which mysql)
+
+if [[ ${#MYSQL} -eq 0 ]]; then
+    echo "Install mysql (client) first."
     exit 1
 fi
 
@@ -52,6 +58,10 @@ while [[ $# -gt 0 ]]; do
                 shift
             fi
             ;;
+        -la|-al|--list-all)
+            shift
+            NEW_TODO LISTALL
+            ;;
         -v|--verbose)
             shift
             VERBOSE="-v"
@@ -70,6 +80,7 @@ if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
     echo "Usage: database.sh [OPTIONS...]"
     echo "Options:"
     echo "  -h, --help              Show this help and exit"
+    echo "  -al, -la, --list-all    List all tables in database"
     echo "  -b, --backup <file>     Backup database to file"
     echo "  -d, --drop, --delete    Drop all tables in database"
     echo "  -i, --import <file>     Import and execute SQL queries"
@@ -92,7 +103,18 @@ DBU=${INFO[4]}
 DBP=${INFO[5]}
 PMA=${INFO[6]}
 
-if [[ $TODO == "BACKUP" ]]; then
+if [[ $TODO == "LISTALL" ]]; then
+
+    TABLES=(`echo "SHOW TABLES;" | \
+        $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
+
+    echo "Database '${DBN}' contains ${#TABLES[@]} tables."
+
+    [ ${#TABLES[@]} -gt 0 ] && (IFS=$'\n'; echo "${TABLES[*]}")
+
+    exit 0
+
+elif [[ $TODO == "BACKUP" ]]; then
 
     RAND=$(($RANDOM$RANDOM%99999999+10000000))
     FILE="mysqldump_${RAND}.php"
@@ -107,13 +129,6 @@ if [[ $TODO == "BACKUP" ]]; then
     $CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
 
 elif [[ $TODO == "DROP" ]]; then
-
-    MYSQL=$(which mysql)
-
-    if [[ ${#MYSQL} -eq 0 ]]; then
-        echo "Install mysql (client) first."
-        exit 1
-    fi
 
     TABLES=(`echo "SHOW TABLES;" | \
         $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
