@@ -34,6 +34,16 @@ info.sh
       -dbu, --database-username    Username to connect to database
       -dbp, --database-password    Password to connect to database
 
+database.sh
+-----------
+    Usage: database.sh [OPTIONS...]
+    Options:
+      -h, --help              Show this help and exit
+      -b, --backup <file>     Backup database to file
+      -d, --drop, --delete    Drop all tables in database
+      -i, --import <file>     Import and execute SQL queries
+      -v, --verbose           Show more status if possible
+
 Developer
 ---------
 * caiguanhao
