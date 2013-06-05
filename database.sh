@@ -16,6 +16,7 @@ fi
 TODO=""
 OUTPUT_FILE="-"
 VERBOSE=""
+SHOWHELP=0
 
 NEW_TODO()
 {
@@ -30,9 +31,6 @@ while [[ $# -gt 0 ]]; do
         -b|--backup)
             shift
             NEW_TODO BACKUP
-            ;;
-        -o|--output)
-            shift
             if [[ $# -gt 0 ]]; then
                 OUTPUT_FILE="$1"
                 shift
@@ -42,7 +40,7 @@ while [[ $# -gt 0 ]]; do
             shift
             NEW_TODO DROP
             ;;
-        -i|-import|--import-sql)
+        -i|--import)
             shift
             NEW_TODO IMPORT
             if [[ $# -gt 0 ]]; then
@@ -58,14 +56,24 @@ while [[ $# -gt 0 ]]; do
             shift
             VERBOSE="-v"
             ;;
+        -h|--help)
+            shift
+            SHOWHELP=1
+            ;;
         *)
             break
             ;;
     esac
 done
 
-if [[ ${#TODO} -eq 0 ]]; then
-    echo "Help"
+if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
+    echo "Usage: database.sh [OPTIONS...]"
+    echo "Options:"
+    echo "  -h, --help              Show this help and exit"
+    echo "  -b, --backup <file>     Backup database to file"
+    echo "  -d, --drop, --delete    Drop all tables in database"
+    echo "  -i, --import <file>     Import and execute SQL queries"
+    echo "  -v, --verbose           Show more status if possible"
     exit 0
 fi
 
