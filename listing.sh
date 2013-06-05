@@ -90,12 +90,13 @@ if [[ $TODO == "LIST" ]]; then
     STATUS=${LIST[${#LIST[@]}-1]}
     unset LIST[${#LIST[@]}-1]
     FTP_DSP="${FTP}${REMOTE_DIR}${PATHTOLIST}"
+    FTP_DSP="ftp://${FTP_DSP##*@}"
     if [[ ${STATUS:0:1} -eq 2 ]]; then
-        echo "ftp://${FTP_DSP##*@} returned ${#LIST[@]} items with status code ${STATUS}."
+        echo "$FTP_DSP returned ${#LIST[@]} items with status code $STATUS."
         IFS=$'\n'
         echo "${LIST[*]}"
     else
-        echo "ftp://${FTP_DSP##*@} returned status code ${STATUS}."
+        echo "$FTP_DSP returned status code $STATUS."
     fi
 fi
 

@@ -52,7 +52,8 @@
     Usage: upload.sh [OPTIONS...]
     Options:
       -h, --help                   Show this help and exit
-      -f, -from <file>             File to upload, directory will be compressed as zip file
+      -f, -from <file>             File to upload, directory will be 
+                                   compressed as zip file
       -t, --to <path>              Remote path relative to /htdocs
       -e, --extract <file.zip>     Remote zip file to extract
       -d, --destination <path>     Extract files to path

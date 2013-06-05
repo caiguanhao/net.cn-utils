@@ -34,7 +34,8 @@ HELP()
     echo "Usage: $0 [OPTIONS...]"
     echo "Options:"
     echo "  -h, --help                   Show this help and exit"
-    echo "  -f, -from <file>             File to upload, directory will be compressed as zip file"
+    echo "  -f, -from <file>             File to upload, directory will be 
+                               compressed as zip file"
     echo "  -t, --to <path>              Remote path relative to ${REMOTE_DIR}"
     echo "  -e, --extract <file.zip>     Remote zip file to extract"
     echo "  -d, --destination <path>     Extract files to path"
@@ -87,7 +88,8 @@ while [[ $# -gt 0 ]]; do
                 else
                     echo "[Error] -e, --extract:"
                     echo "[Error] You must specify the name of remote zip file."
-                    echo "[Error] Remove this option if you want to extract the zip file that will be uploaded."
+                    echo "[Error] Remove this option if you want to extract"
+                    echo "[Error] the zip file that will be uploaded."
                     exit 1
                 fi
             fi
@@ -159,7 +161,8 @@ if [[ ${#FROM} -gt 0 ]]; then
 
     INFORM "UPLOADING FILE"
 
-    echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
+    echo -n $BOLD $ $CURL --ftp-create-dirs -T "${FROM} "
+    echo "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
     [ $INTERACTIVE -eq 1 ] && read
 
     $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"
@@ -236,13 +239,14 @@ if [[ $EXTRACT -eq 1 ]]; then
         [ $INTERACTIVE -eq 1 ] && read
 
         echo -n "Deleting ${REMOTE_DIR}${EXTRACT_SRC} ... "
-        OUTPUT=`$CURL -s "${FTP}" -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" -w "%{http_code}" -o /dev/null`
+        OUTPUT=`$CURL -s "${FTP}" -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" \
+        -w "%{http_code}" -o /dev/null`
         echo "Done"
 
         if [[ $OUTPUT -eq 250 ]]; then
             echo "[OK] File has been deleted."
         else
-            echo "[Exception] Exit with FTP server return code $OUTPUT (should be 250)."
+            echo "[Exception] Exit with FTP return code $OUTPUT (should be 250)."
             exit 1
         fi
     fi
