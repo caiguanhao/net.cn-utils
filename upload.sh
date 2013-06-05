@@ -53,6 +53,13 @@ while [[ $# -gt 0 ]]; do
                 shift
             fi
             ;;
+        -d|--destination)
+            shift
+            if [[ $# -gt 0 ]]; then
+                EXTRACT_DST="$1"
+                shift
+            fi
+            ;;
         *)
             break
             ;;
@@ -120,6 +127,9 @@ if [[ $EXTRACT -eq 1 ]]; then
     if [[ ${EXTRACT_SRC:0:1} != "/" ]]; then
         EXTRACT_SRC="/${EXTRACT_SRC}"
     fi
+    if [[ ${EXTRACT_DST:0:1} != "/" ]]; then
+        EXTRACT_DST="/${EXTRACT_DST}"
+    fi
 
     OUTPUT=`$CURL -s -G "http://cp.hichina.com/FileUncompressionold.aspx" \
     -d "tr=fileuncompressionold" \
@@ -140,14 +150,14 @@ if [[ $EXTRACT -eq 1 ]]; then
     echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
     -d "serverfilename=${EXTRACT_SRC}" \
-    -d "serverdir=/" \
+    -d "serverdir=${EXTRACT_DST}" \
     -d "iscover=1" ...$NORMAL "[Enter/Ctrl-C] ?"
     read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
     -d "serverfilename=${EXTRACT_SRC}" \
-    -d "serverdir=/" \
+    -d "serverdir=${EXTRACT_DST}" \
     -d "iscover=1" \
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
