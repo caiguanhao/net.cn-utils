@@ -4,6 +4,9 @@ PWD="`pwd`"
 INFO_SH="info.sh"
 RMRF_TPL="rm-rf.tpl"
 COUNTDOWN=5
+COLS=`tput cols`
+BOLD=`tput bold`
+NORMAL=`tput sgr0`
 
 CURL=$(which curl)
 
@@ -32,6 +35,16 @@ NEW_TODO()
     TODO=$1
 }
 
+WARN()
+{
+    printf "\e[1;33;41m"
+    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    printf "${BOLD}%*s" $FRONT_SPACES
+    printf "${1}"
+    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${NORMAL}\n"
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -rm|-rm-rf|--remove-all)
@@ -46,6 +59,10 @@ done
 
 if [[ $TODO == "RMRF" ]]; then
 
+    WARN "WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
+    WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
+    echo -n "Press Enter to continue; Ctrl-C to cancel. "
+    read
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
@@ -53,7 +70,12 @@ if [[ $TODO == "RMRF" ]]; then
         echo "Start removing all files on server in ${i} seconds... Ctrl-C to cancel."
         sleep 1
     done
+    echo -n "Uploading self-deleting script... "
     cat "$PWD/$RMRF_TPL" | \
     $CURL -s -T - "$FTP/htdocs/${RMRF_TPL%\.*}.php"
+    echo "Done"
+    echo -n "Deleting all files... "
     $CURL -s -L "$WEB/${RMRF_TPL%\.*}.php"
+    echo "Done"
+    exit 0
 fi
