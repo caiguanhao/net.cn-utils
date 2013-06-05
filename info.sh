@@ -168,7 +168,9 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
         exit 1
     fi
 
-    FTPMIRROR="lftp ${FTPLINK} -e \"mirror --continue --parallel=10 /htdocs `echo ~`/FTP\""
+    FTPMIRROR="lftp \"${FTPLINK}\" -e \"mirror --continue --parallel=10\
+        /htdocs `echo ~`/FTP\""
+    FTPMIRROR=`echo "${FTPMIRROR}" | sed -e"s/  */ /g"`
 
     if [[ $PART2 -eq 0 ]]; then
         echo "  FTP Link:                 ${FTPLINK}"
@@ -295,7 +297,10 @@ then
         get_value_from PMA starting_from 'id="input_password"'
         DBPASS=${PMA%%\"*}
 
-        MYSQLDUMP="mysqldump --set-gtid-purged=OFF -v -h ${DBHOST} -u ${DBUSER} -p'${DBPASS}' ${DBNAME} > ${DBNAME}@`date +'%Y%m%d%H%M%S'`.sql"
+        MYSQLDUMP="mysqldump --set-gtid-purged=OFF -v -h \"${DBHOST}\" \
+            -u \"${DBUSER}\" -p\"${DBPASS}\" \"${DBNAME}\" \
+            > ${DBNAME}@`date +'%Y%m%d%H%M%S'`.sql"
+        MYSQLDUMP=`echo "${MYSQLDUMP}" | sed -e"s/  */ /g"`
 
         if [[ $PART6 -eq 0 ]]; then
             echo "  Database Host:            ${DBHOST}"
