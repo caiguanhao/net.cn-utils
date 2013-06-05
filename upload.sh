@@ -9,6 +9,7 @@ EXTRACT=0
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
 INTERACTIVE=1
+OVERWRITE=1
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
@@ -68,6 +69,10 @@ while [[ $# -gt 0 ]]; do
                 EXTRACT_DST="$1"
                 shift
             fi
+            ;;
+        --no-overwrite)
+            shift
+            OVERWRITE=0
             ;;
         -y|--assumeyes|-n|--non-interactive)
             shift
@@ -164,14 +169,14 @@ if [[ $EXTRACT -eq 1 ]]; then
     -d "action=uncommpressfilesold" \
     -d "serverfilename=${EXTRACT_SRC}" \
     -d "serverdir=${EXTRACT_DST}" \
-    -d "iscover=1" ...$NORMAL "[Enter/Ctrl-C] ?"
+    -d "iscover=${OVERWRITE}" ...$NORMAL "[Enter/Ctrl-C] ?"
     [ $INTERACTIVE -eq 1 ] && read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
     -d "serverfilename=${EXTRACT_SRC}" \
     -d "serverdir=${EXTRACT_DST}" \
-    -d "iscover=1" \
+    -d "iscover=${OVERWRITE}" \
     -b "${PWD}/cookie" \
     -c "${PWD}/cookie" \
     -A "${USER_AGENT}" | iconv -f gbk`
