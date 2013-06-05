@@ -9,9 +9,8 @@ if [[ ${#CURL} -eq 0 ]]; then
     exit 1
 fi
 
-USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)"
-USER_AGENT="${USER_AGENT} AppleWebKit/537.31 (KHTML, like Gecko)"
-USER_AGENT="${USER_AGENT} Chrome/26.0.1410.65 Safari/537.31"
+USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)
+AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
