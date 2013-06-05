@@ -4,6 +4,9 @@ PWD="`pwd`"
 INFO_SH="info.sh"
 MYSQLDUMP_TPL="mysqldump.tpl"
 COUNTDOWN=5
+COLS=`tput cols`
+BOLD=`tput bold`
+NORMAL=`tput sgr0`
 
 CURL=$(which curl)
 
@@ -30,6 +33,16 @@ NEW_TODO()
         echo "One database action at a time." && exit 1
     fi
     TODO=$1
+}
+
+WARN()
+{
+    printf "\e[1;33;41m"
+    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    printf "${BOLD}%*s" $FRONT_SPACES
+    printf "${1}"
+    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${NORMAL}\n"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -140,6 +153,10 @@ elif [[ $TODO == "DROP" ]]; then
 
     echo "Found ${#TABLES[@]} tables."
 
+    WARN "WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
+    WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
+    echo -n "Press Enter to continue; Ctrl-C to cancel. "
+    read
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"

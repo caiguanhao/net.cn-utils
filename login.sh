@@ -5,7 +5,7 @@ PWD="`pwd`"
 CURL=$(which curl)
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo "Install curl first."
+    echo "[Error] Install curl first."
     exit 1
 fi
 
@@ -52,7 +52,7 @@ fi
 USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) \
 AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
-rm -f "${PWD}/cookie"
+echo > "${PWD}/cookie"
 
 IFS=$'\r'
 
@@ -70,7 +70,7 @@ CHECKCODE_POS=${CHECKCODE%%;*}
 CHECKCODE=${CHECKCODE:0:${#CHECKCODE_POS}}
 
 if [[ ${#CHECKCODE} -eq 0 ]]; then
-    echo "No verification code."
+    echo "[Error] No verification code."
     exit 1
 fi
 
@@ -117,7 +117,8 @@ OUTPUT=`$CURL -s "http://cp.hichina.com/login.aspx" \
 --data-urlencode "btnSubmit.y=8"`
 
 if [[ ! $OUTPUT -eq 302 ]]; then
-    echo "Exit with status code ${OUTPUT} (should be 302)."
+    echo "[Error] Exit with status code ${OUTPUT} (should be 302)."
+    echo "[Error] Maybe your user name or password is wrong?"
     exit 1
 fi
 
@@ -128,8 +129,9 @@ OUTPUT=`$CURL -s "http://cp.hichina.com/index.aspx" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
 if [[ ! $OUTPUT == *退出* ]]; then
-    echo "It seems you are not logged in."
+    echo "[Error] It seems you are not logged in."
     exit 1
 fi
 
-echo "You are logged in."
+echo "[OK] You are now logged in."
+exit 0
