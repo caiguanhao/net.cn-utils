@@ -7,6 +7,7 @@ COUNTDOWN=5
 COLS=`tput cols`
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
+REMOTE_DIR="/htdocs"
 
 CURL=$(which curl)
 
@@ -45,9 +46,19 @@ WARN()
     printf "${NORMAL}\n"
 }
 
+PATHTOLIST="/"
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -rm|-rm-rf|--remove-all)
+        -l|--list)
+            shift
+            NEW_TODO LIST
+            if [[ $# -gt 0 ]]; then
+                PATHTOLIST="$1"
+                shift
+            fi
+            ;;
+        -rm-rf|--remove-all)
             shift
             NEW_TODO RMRF
             ;;
@@ -56,6 +67,26 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+if [[ $TODO == "LIST" ]]; then
+    if [[ ${PATHTOLIST:0:1} != "/" ]]; then
+        PATHTOLIST="/${PATHTOLIST}"
+    fi
+    if [[ ${PATHTOLIST:(-1)} != "/" ]]; then
+        PATHTOLIST="${PATHTOLIST}/"
+    fi
+    LIST=(`$CURL -w "%{http_code}" -s -l "${FTP}${REMOTE_DIR}${PATHTOLIST}"`)
+    STATUS=${LIST[${#LIST[@]}-1]}
+    unset LIST[${#LIST[@]}-1]
+    FTP_DSP="${FTP}${REMOTE_DIR}${PATHTOLIST}"
+    if [[ ${STATUS:0:1} -eq 2 ]]; then
+        echo "ftp://${FTP_DSP##*@} returned ${#LIST[@]} items with status code ${STATUS}."
+        IFS=$'\n'
+        echo "${LIST[*]}"
+    else
+        echo "ftp://${FTP_DSP##*@} returned status code ${STATUS}."
+    fi
+fi
 
 if [[ $TODO == "RMRF" ]]; then
 
@@ -72,7 +103,7 @@ if [[ $TODO == "RMRF" ]]; then
     done
     echo -n "Uploading self-deleting script... "
     cat "$PWD/$RMRF_TPL" | \
-    $CURL -s -T - "$FTP/htdocs/${RMRF_TPL%\.*}.php"
+    $CURL -s -T - "${FTP}${REMOTE_DIR}/${RMRF_TPL%\.*}.php"
     echo "Done"
     echo -n "Deleting all files... "
     $CURL -s -L "$WEB/${RMRF_TPL%\.*}.php"
