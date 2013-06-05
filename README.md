@@ -57,6 +57,7 @@
       -e, --extract <file.zip>     Remote zip file to extract
       -d, --destination <path>     Extract files to path
       -s, --no-overwrite           Do not overwrite existing files
+      -k, --keep-archive           Do not delete the archive file
       -y, --assumeyes, -n, --non-interactive
                                    Execute commands without confirmations
 

@@ -10,6 +10,7 @@ BOLD=`tput bold`
 NORMAL=`tput sgr0`
 INTERACTIVE=1
 OVERWRITE=1
+KEEPARCHIVE=0
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo "Install curl first."
@@ -37,6 +38,7 @@ help()
     echo "  -e, --extract <file.zip>     Remote zip file to extract"
     echo "  -d, --destination <path>     Extract files to path"
     echo "  -s, --no-overwrite           Do not overwrite existing files"
+    echo "  -k, --keep-archive           Do not delete the archive file"
     echo "  -y, --assumeyes, -n, --non-interactive"
     echo "                               Execute commands without confirmations"
     exit 0
@@ -91,6 +93,10 @@ while [[ $# -gt 0 ]]; do
             shift
             OVERWRITE=0
             ;;
+        -k|--keep-archive)
+            shift
+            KEEPARCHIVE=1
+            ;;
         -y|--assumeyes|-n|--non-interactive)
             shift
             INTERACTIVE=0
@@ -109,7 +115,7 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-FTP="${INFO[0]}${REMOTE_DIR}"
+FTP="${INFO[0]}"
 
 if [[ ${#FROM} -gt 0 ]]; then
     TMP_FILE=""
@@ -139,10 +145,10 @@ if [[ ${#FROM} -gt 0 ]]; then
         TO="/${TO}"
     fi
 
-    echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
+    echo $BOLD $ $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
     [ $INTERACTIVE -eq 1 ] && read
 
-    $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${TO}"
+    $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"
 
     if [[ ${#TMP_FILE} -gt 0 ]]; then
         rm -f "${TMP_FILE}"
@@ -201,10 +207,27 @@ if [[ $EXTRACT -eq 1 ]]; then
 
     if [[ $OUTPUT == *200\|OK* ]]; then
         echo "[OK] File has been successfully extracted."
-        exit 0
     else
         echo "[Error] Fail to extract file. Message: $OUTPUT"
         exit 1
     fi
 
+    if [[ $KEEPARCHIVE -ne 1 ]]; then
+        echo
+
+        echo $BOLD $ $CURL -s "${FTP}" \
+        -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" $NORMAL "[Enter/Ctrl-C] ?"
+        [ $INTERACTIVE -eq 1 ] && read
+
+        echo -n "Deleting ${REMOTE_DIR}${EXTRACT_SRC} ... "
+        OUTPUT=`$CURL -s "${FTP}" -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" -w "%{http_code}" -o /dev/null`
+        echo "Done"
+
+        if [[ $OUTPUT -eq 250 ]]; then
+            echo "[OK] File has been deleted."
+        else
+            echo "[Exception] Exit with FTP server return code $OUTPUT (should be 250)."
+            exit 1
+        fi
+    fi
 fi
