@@ -1,6 +1,6 @@
 ``NET.CN Utils``
 ================
-**``Make your NET.CN's virtual space suck less.``**
+**``Make your NET.CN virtual space suck less and SAVE lots of time.``**
 
 ``login.sh``
 ------------
@@ -102,6 +102,33 @@
       Sending SQL queries... Done
       phpMyAdmin says: Your SQL query has been executed successfully.
 
+    # Upload current directory to server
+    $ bash upload.sh -f . -d
+                                   CREATING ARCHIVE
+       $ /usr/bin/zip -9 -q -r /tmp/33116860.zip . [Enter/Ctrl-C] ?
+
+                                    UPLOADING FILE
+       $ /usr/bin/curl --ftp-create-dirs -T /tmp/33116860.zip ftp://hmu123456:12345678@123.132.111.213/htdocs/33116860.zip [Enter/Ctrl-C] ?
+
+                                  EXTRACTING ARCHIVE
+       $ /usr/bin/curl -s -G http://cp.hichina.com/AJAXPage.aspx -d action=uncommpressfilesold -d serverfilename=/33116860.zip -d serverdir=/ -d iscover=1 ... [Enter/Ctrl-C] ?
+
+      [OK] File has been successfully extracted.
+                                   DELETING ARCHIVE
+       $ /usr/bin/curl -s ftp://hmu123456:12345678@123.132.111.213 -X DELE /htdocs/33116860.zip  [Enter/Ctrl-C] ?
+
+      Deleting /htdocs/33116860.zip ... Done
+      [OK] File has been deleted.
+
+    # Remove everything on server
+    $ bash listing.sh -rm-rf
+                  WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!            
+      THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP. 
+      Press Enter to continue; Ctrl-C to cancel. 
+      Start removing all files on server in 0 seconds... Ctrl-C to cancel.
+      Uploading self-deleting script... Done
+      Deleting all files... Done
+
 ``Requirements``
 ----------------
 |               |``curl``|``mysql``|``zip``|
@@ -118,6 +145,7 @@
     M2 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite / 500 MB Space
     M3 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite/MySQL / 1 GB Space
     Admin panel: FTP, online ZIP decompression, phpMyAdmin with queued MySQL backup.
+    More info: http://www.net.cn/hosting/m3/
 
 ``Developer``
 -------------
