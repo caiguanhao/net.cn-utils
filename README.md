@@ -70,6 +70,16 @@
       -l, --list <path>            List of contents in path
       -rm-rf, --remove-all         Delete everything on server
 
+``Requirements``
+----------------
+|               |``curl``|``mysql``|``zip``|
+|---------------|:------:|:-------:|:-----:|
+|``login.sh``   | ``X``  |         |       |
+|``info.sh``    | ``X``  |         |       |
+|``database.sh``| ``X``  | ``X``   |       |
+|``upload.sh``  | ``X``  |         | ``X`` |
+|``listing.sh`` | ``X``  |         |       |
+
 ``Developer``
 -------------
 * ``caiguanhao``
