@@ -47,7 +47,7 @@ HELP()
 
 INFORM()
 {
-    printf "\e[1;30;42m"
+    printf "\e[1;33;42m"
     FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
     printf "${BOLD}%*s" $FRONT_SPACES
     printf "${1}"
