@@ -81,6 +81,18 @@ if [[ $SHOWHELP -eq 1 ]]; then
     ARGUMENTS=()
 fi
 
+date -r 0 >/dev/null 2>&1
+if [[ $? -eq 0 ]]; then
+    DATE_TYPE=0
+else
+    date -d "@0" >/dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        DATE_TYPE=1
+    else
+        DATE_TYPE=2
+    fi
+fi
+
 extract_value_of()
 {
     RESULT=${!3%%\"${1}\"*}
@@ -120,11 +132,20 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Opendate   from INFO to OPENDATE
     OPENDATE=$(grep -oE "[0-9]{1,}" <<< "$OPENDATE")
-    OPENDATE=$(date -r "${OPENDATE%000}" "+%Y-%m-%d %H:%M:%S")
 
     extract_value_of Enddate    from INFO to ENDDATE
     ENDDATE=$(grep -oE "[0-9]{1,}" <<< "$ENDDATE")
-    ENDDATE=$(date -r "${ENDDATE%000}" "+%Y-%m-%d %H:%M:%S")
+
+    case $DATE_TYPE in
+        0)
+            OPENDATE=$(date -r "${OPENDATE%000}" "+%Y-%m-%d %H:%M:%S")
+            ENDDATE=$(date -r "${ENDDATE%000}" "+%Y-%m-%d %H:%M:%S")
+            ;;
+        1)
+            OPENDATE=$(date -d "@${OPENDATE%000}" "+%Y-%m-%d %H:%M:%S")
+            ENDDATE=$(date -d "@${ENDDATE%000}" "+%Y-%m-%d %H:%M:%S")
+            ;;
+    esac
 
     extract_value_of Siteid     from INFO to SITEID
 
