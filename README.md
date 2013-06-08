@@ -16,6 +16,7 @@
     Options:
       -h, --help                   Show this help and exit
     Items:
+      -id, --site-id               User name
       -t, --type                   Type of virtual hosting
       -vf, --valid-from            Start date of the bill
       -vt, --valid-to              End date of the bill

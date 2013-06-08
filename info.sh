@@ -22,11 +22,14 @@ ARGUMENTS=()
 
 PART1=0
 PART1_VAR=(     TYPENAME        OPENDATE        ENDDATE         STATUS
-                SITEIP          OSNAME          SCRIPTS         WEBLINK     )
+                SITEIP          OSNAME          SCRIPTS         WEBLINK
+                SITEID                                                      )
 PART1_SHORT=(   -t              -vf             -vt             -s
-                -ip             -os             -l              -web        )
+                -ip             -os             -l              -web
+                -id                                                         )
 PART1_LONG=(    --type          --valid-from    --valid-to      --status
-                --ip-address    --system        --languages     --web-link  )
+                --ip-address    --system        --languages     --web-link
+                --site-id                                                   )
 
 PART2=0
 PART2_VAR=(     FTPLINK         FTPMIRROR                                   )
@@ -348,6 +351,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo "Options:"
         echo "  -h, --help                   Show this help and exit"
         echo "Items:"
+        echo "  -id, --site-id               User name"
         echo "  -t, --type                   Type of virtual hosting"
         echo "  -vf, --valid-from            Start date of the bill"
         echo "  -vt, --valid-to              End date of the bill"
