@@ -216,6 +216,9 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     fi
 
     SPACEUSED=${INFO##*&nbsp;}
+    SPACEUSED=${SPACEUSED/使用}
+    SPACEUSED=${SPACEUSED/\/总/ used, }
+    SPACEUSED="${SPACEUSED} total"
 
     if [[ $PART3 -eq 0 ]]; then
         echo "  Space Usage:              ${SPACEUSED}"
