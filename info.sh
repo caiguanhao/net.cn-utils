@@ -317,7 +317,12 @@ then
         get_value_from PMA starting_from 'id="input_password"'
         DBPASS=${PMA%%\"*}
 
-        MYSQLDUMP="mysqldump --set-gtid-purged=OFF -v -h \"${DBHOST}\" \
+        SGP=""
+        mysqldump --set-gtid-purged=OFF >/dev/null 2>&1
+        if [[ $? -eq 1 ]]; then
+            SGP="--set-gtid-purged=OFF"
+        fi
+        MYSQLDUMP="mysqldump ${SGP} -v -h \"${DBHOST}\" \
             -u \"${DBUSER}\" -p\"${DBPASS}\" \"${DBNAME}\" \
             > ${DBNAME}@`date +'%Y%m%d%H%M%S'`.sql"
         MYSQLDUMP=`echo "${MYSQLDUMP}" | sed -e"s/  */ /g"`
