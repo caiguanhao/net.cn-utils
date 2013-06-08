@@ -79,8 +79,10 @@
 
     # Get server info
     $ bash info.sh -csql -cftp -web -dbn
-      mysqldump --set-gtid-purged=OFF -v -h "hdm-070.hichina.com" -u "hdm0700300" -p"1234567890" "hdm0700300_db" > hdm0700300_db@20130606000000.sql
-      lftp "ftp://hmu123456:12345678@123.132.111.213" -e "mirror --continue --parallel=10 /htdocs /Users/caiguanhao/FTP"
+      mysqldump --set-gtid-purged=OFF -v -h "hdm-070.hichina.com" -u "hdm0700300
+      " -p"1234567890" "hdm0700300_db" > hdm0700300_db@20130606000000.sql
+      lftp "ftp://hmu123456:12345678@123.132.111.213" -e "mirror --continue --pa
+      rallel=10 /htdocs /Users/caiguanhao/FTP"
       http://hmu123456.chinaw3.com
       hdm0700300_db
 
@@ -108,14 +110,18 @@
        $ /usr/bin/zip -9 -q -r /tmp/33116860.zip . [Enter/Ctrl-C] ?
 
                                     UPLOADING FILE
-       $ /usr/bin/curl --ftp-create-dirs -T /tmp/33116860.zip ftp://hmu123456:12345678@123.132.111.213/htdocs/33116860.zip [Enter/Ctrl-C] ?
+       $ /usr/bin/curl --ftp-create-dirs -T /tmp/33116860.zip ftp://hmu123456:12
+      345678@123.132.111.213/htdocs/33116860.zip [Enter/Ctrl-C] ?
 
                                   EXTRACTING ARCHIVE
-       $ /usr/bin/curl -s -G http://cp.hichina.com/AJAXPage.aspx -d action=uncommpressfilesold -d serverfilename=/33116860.zip -d serverdir=/ -d iscover=1 ... [Enter/Ctrl-C] ?
+       $ /usr/bin/curl -s -G http://cp.hichina.com/AJAXPage.aspx -d action=uncom
+      mpressfilesold -d serverfilename=/33116860.zip -d serverdir=/ -d iscover=1
+       ... [Enter/Ctrl-C] ?
 
       [OK] File has been successfully extracted.
                                    DELETING ARCHIVE
-       $ /usr/bin/curl -s ftp://hmu123456:12345678@123.132.111.213 -X DELE /htdocs/33116860.zip  [Enter/Ctrl-C] ?
+       $ /usr/bin/curl -s ftp://hmu123456:12345678@123.132.111.213 -X DELE /htdo
+      cs/33116860.zip  [Enter/Ctrl-C] ?
 
       Deleting /htdocs/33116860.zip ... Done
       [OK] File has been deleted.
