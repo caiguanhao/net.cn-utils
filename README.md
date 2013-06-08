@@ -132,6 +132,7 @@
     $ bash listing.sh -rm-rf
                   WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!            
       THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP. 
+              CURRENT SPACE USAGE OF HMU123456: 500M USED, 1000M TOTAL.
       Press Enter to continue; Ctrl-C to cancel. 
       Start removing all files on server in 0 seconds... Ctrl-C to cancel.
       Uploading self-deleting script... Done
