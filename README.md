@@ -73,11 +73,11 @@
 
 ``Examples``
 ------------
-    # Login
+### Login
     $ bash login.sh -u hmu123456 -p 12345678
       [OK] You are now logged in.
 
-    # Get server info
+### Get server info
     $ bash info.sh -csql -cftp -web -dbn
       mysqldump --set-gtid-purged=OFF -v -h "hdm-070.hichina.com" -u "hdm0700300
       " -p"1234567890" "hdm0700300_db" > hdm0700300_db@20130606000000.sql
@@ -86,10 +86,10 @@
       http://hmu123456.chinaw3.com
       hdm0700300_db
 
-    # Backup MySQL Database
+### Backup MySQL Database
     $ bash database.sh --backup my.sql
 
-    # Drop all tables in database
+### Drop all tables in database
     $ bash database.sh --drop
       Found 80 tables.
                    WARNING: ALL DATA IN DATABASE WILL BE REMOVED!               
@@ -98,13 +98,13 @@
       Dropping table my_table_01 [1/80] ... Done
       ...
 
-    # Import backup
+### Import backup
     $ bash database.sh --import my.sql
       Logging into phpMyAdmin... Done
       Sending SQL queries... Done
       phpMyAdmin says: Your SQL query has been executed successfully.
 
-    # Upload current directory to server
+### Upload current directory to server
     $ bash upload.sh -f . -d
                                    CREATING ARCHIVE
        $ /usr/bin/zip -9 -q -r /tmp/33116860.zip . [Enter/Ctrl-C] ?
@@ -126,7 +126,7 @@
       Deleting /htdocs/33116860.zip ... Done
       [OK] File has been deleted.
 
-    # Remove everything on server
+### Remove everything on server
     $ bash listing.sh -rm-rf
                   WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!            
       THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP. 
