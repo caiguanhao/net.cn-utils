@@ -133,7 +133,8 @@
                   WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!            
       THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP. 
               CURRENT SPACE USAGE OF HMU123456: 500M USED, 1000M TOTAL.
-      Press Enter to continue; Ctrl-C to cancel. 
+      Type "hmu123456" and press Enter to continue; Ctrl-C to cancel.
+      hmu123456
       Start removing all files on server in 0 seconds... Ctrl-C to cancel.
       Uploading self-deleting script... Done
       Deleting all files... Done

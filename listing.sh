@@ -109,8 +109,12 @@ if [[ $TODO == "RMRF" ]]; then
     WARN "WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
     WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
     WARN $(echo "CURRENT SPACE USAGE OF ${ID}: ${SPACE}." | tr '[a-z]' '[A-Z]')
-    echo -n "Press Enter to continue; Ctrl-C to cancel. "
-    read
+    echo
+    while [[ $CONFIRM != $ID ]]; do
+        printf "\e[1A"
+        echo "Type \"${ID}\" and press Enter to continue; Ctrl-C to cancel."
+        read CONFIRM
+    done
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
