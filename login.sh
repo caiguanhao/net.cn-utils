@@ -11,14 +11,6 @@ fi
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -h|--help)
-            echo "Usage: $0 [OPTIONS...]"
-            echo "Options:"
-            echo "  -h, --help                   Show this help and exit"
-            echo "  -u, --username <username>    Log in with this user name"
-            echo "  -p, --password <password>    Log in with this password"
-            exit 0
-            ;;
         -u|--username)
             shift
             if [[ $# -gt 0 ]]; then
@@ -34,7 +26,12 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         *)
-            break
+            echo "Usage: $0 [OPTIONS...]"
+            echo "Options:"
+            echo "  -h, --help                   Show this help and exit"
+            echo "  -u, --username <username>    Log in with this user name"
+            echo "  -p, --password <password>    Log in with this password"
+            exit 0
             ;;
     esac
 done
