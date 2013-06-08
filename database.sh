@@ -141,6 +141,12 @@ elif [[ $TODO == "BACKUP" ]]; then
 
     $CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
 
+    if [[ -s "$OUTPUT_FILE" ]]; then
+        echo "[OK] Your database has been successfully backed up to $OUTPUT_FILE ."
+    else
+        echo "[Error] $OUTPUT_FILE is empty."
+    fi
+
 elif [[ $TODO == "DROP" ]]; then
 
     TABLES=(`echo "SHOW TABLES;" | \

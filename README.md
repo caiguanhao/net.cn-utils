@@ -88,6 +88,7 @@
 
 ### Backup MySQL Database
     $ bash database.sh --backup my.sql
+      [OK] Your database has been successfully backed up to my.sql .
 
 ### Drop all tables in database
     $ bash database.sh --drop
