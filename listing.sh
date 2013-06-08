@@ -69,15 +69,19 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp`)
+IFS=$'\n'
+
+INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -id -sp`)
 
 if [[ $? -ne 0 ]]; then
     echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
     exit 1
 fi
 
-WEB=${INFO[0]}
-FTP=${INFO[1]}
+WEB="${INFO[0]}"
+FTP="${INFO[1]}"
+ID="${INFO[2]}"
+SPACE="${INFO[3]}"
 
 if [[ $TODO == "LIST" ]]; then
     if [[ ${PATHTOLIST:0:1} != "/" ]]; then
@@ -104,6 +108,8 @@ if [[ $TODO == "RMRF" ]]; then
 
     WARN "WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
     WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
+    CURRENT=$(echo "CURRENT SPACE USAGE OF ${ID}: ${SPACE}." | tr '[a-z]' '[A-Z]')
+    WARN "${CURRENT}"
     echo -n "Press Enter to continue; Ctrl-C to cancel. "
     read
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
