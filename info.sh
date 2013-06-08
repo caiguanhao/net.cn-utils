@@ -277,7 +277,7 @@ then
     DBLINK=${_INFO%%\'*}
 
     if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
-        echo "  PhpMyAdmin Link:          ${DBLINK}"
+        echo "  phpMyAdmin Link:          ${DBLINK}"
         echo "  Database Name:            ${DBNAME}"
     fi
 
