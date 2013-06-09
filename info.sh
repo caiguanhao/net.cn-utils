@@ -24,13 +24,13 @@ ARGUMENTS=()
 PART1=0
 PART1_VAR=(     TYPENAME        OPENDATE        ENDDATE         STATUS
                 SITEIP          OSNAME          SCRIPTS         WEBLINK
-                SITEID                                                      )
+                SITEID          WEBLINKS                                    )
 PART1_SHORT=(   -t              -vf             -vt             -s
                 -ip             -os             -l              -web
-                -id                                                         )
+                -id             -webs                                       )
 PART1_LONG=(    --type          --valid-from    --valid-to      --status
                 --ip-address    --system        --languages     --web-link
-                --site-id                                                   )
+                --site-id       --web-links                                 )
 
 PART2=0
 PART2_VAR=(     FTPLINK         FTPMIRROR                                   )
@@ -168,7 +168,15 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
-    WEBLINK="http://${SITEID}.chinaw3.com"
+    IFS=$'\r'
+    INFO=`$CURL -s -L "${QUERY_URL}?action=GetDomainBindList" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
+    -A "${USER_AGENT}" | iconv -f gbk`
+    INFO=${INFO##*|}
+    INFO="http://${INFO//,/, http://}"
+    WEBLINK="${INFO%%,*}"
+    WEBLINKS="${INFO}"
 
     if [[ $PART1 -eq 0 ]]; then
         echo "Info for ${SITEID}:"
@@ -180,6 +188,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
         echo "  Operating System:         ${OSNAME}"
         echo "  Programming Languages:    ${SCRIPTS}"
         echo "  Web Link:                 ${WEBLINK}"
+        echo "  Web Links:                ${WEBLINKS}"
     fi
 fi
 
@@ -382,6 +391,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo "  -os, --system                Name of the operating system"
         echo "  -l, --languages              List of languages installed"
         echo "  -web, --web-link             HTTP web link"
+        echo "  -webs, --web-links           All links linked to this hosting"
         echo "  -ftp, --ftp-link             FTP link to the server"
         echo "  -sp, --space-usage           Total space used"
         echo "  -bw, --bandwidth-usage       Bandwidth used in this month"

@@ -25,6 +25,7 @@ info.sh
       -os, --system                Name of the operating system
       -l, --languages              List of languages installed
       -web, --web-link             HTTP web link
+      -webs, --web-links           All links linked to this hosting
       -ftp, --ftp-link             FTP link to the server
       -sp, --space-usage           Total space used
       -bw, --bandwidth-usage       Bandwidth used in this month
