@@ -37,6 +37,7 @@ info.sh
 
       -cftp, --ftp-mirror          Command to download all files
       -csql, --mysqldump           Command to backup database
+      -c, --cookie                 JavaScript to set cookie
 
 database.sh
 -----------

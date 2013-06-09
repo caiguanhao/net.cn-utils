@@ -60,10 +60,15 @@ PART6_SHORT=(   -dbh                            -dbu
 PART6_LONG=(    --database-host                 --database-username
                 --database-password             --mysqldump                 )
 
+PART7=0
+PART7_VAR=(     SETCOOKIE                                                   )
+PART7_SHORT=(   -c                                                          )
+PART7_LONG=(    --cookie                                                    )
+
 SHOWHELP=0
 
 for (( i = 1; i <= $#; i++ )); do
-    for (( j = 1; j <= 6; j++ )); do
+    for (( j = 1; j <= 7; j++ )); do
         SHORT="PART${j}_SHORT[@]"
         SHORT=(${!SHORT})
         LONG="PART${j}_LONG[@]"
@@ -343,6 +348,19 @@ then
     fi
 fi
 
+# Misc
+
+if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART7 -eq 1 ]]; then
+
+    ASI="ASP.NET_SessionId"
+    SETCOOKIE=$(cat "${COOKIE}" | grep "${ASI}" | sed "s/.*${ASI}//")
+    SETCOOKIE="document.cookie=\"${ASI}=${SETCOOKIE:1}\";"
+
+    if [[ $PART7 -eq 0 ]]; then
+        echo "  Set Cookie:               ${SETCOOKIE}"
+    fi
+fi
+
 # Output specified info only
 
 if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
@@ -376,5 +394,6 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo
         echo "  -cftp, --ftp-mirror          Command to download all files"
         echo "  -csql, --mysqldump           Command to backup database"
+        echo "  -c, --cookie                 JavaScript to set cookie"
     fi
 fi
