@@ -1,17 +1,17 @@
-``NET.CN Utils``
-================
-**``Make your NET.CN virtual hosting suck less and SAVE lots of time.``**
+NET.CN Utils
+============
+**Make your NET.CN virtual hosting suck less and SAVE lots of time.**
 
-``login.sh``
-------------
+login.sh
+--------
     Usage: login.sh [OPTIONS...]
     Options:
       -h, --help                   Show this help and exit
       -u, --username <username>    Log in with this user name
       -p, --password <password>    Log in with this password
 
-``info.sh``
------------
+info.sh
+-------
     Usage: info.sh [OPTIONS/ITEMS...]
     Options:
       -h, --help                   Show this help and exit
@@ -38,8 +38,8 @@
       -cftp, --ftp-mirror          Command to download all files
       -csql, --mysqldump           Command to backup database
 
-``database.sh``
----------------
+database.sh
+-----------
     Usage: database.sh [OPTIONS...]
     Options:
       -h, --help                   Show this help and exit
@@ -49,8 +49,8 @@
       -i, --import <file>          Import and execute SQL queries
       -v, --verbose                Show more status if possible
 
-``upload.sh``
--------------
+upload.sh
+---------
     Usage: upload.sh [OPTIONS...]
     Options:
       -h, --help                   Show this help and exit
@@ -64,16 +64,16 @@
       -y, --assumeyes, -n, --non-interactive
                                    Execute commands without confirmations
 
-``listing.sh``
---------------
+listing.sh
+----------
     Usage: listing.sh [OPTIONS...]
     Options:
       -h, --help                   Show this help and exit
       -l, --list <path>            List of contents in path
       -rm-rf, --remove-all         Delete everything on server
 
-``Examples``
-------------
+Examples
+--------
 ### Login
     $ bash login.sh -u hmu123456 -p 12345678
       [OK] You are now logged in.
@@ -139,26 +139,26 @@
       Uploading self-deleting script... Done
       Deleting all files... Done
 
-``Requirements``
-----------------
-* ``Linux or Mac OS X``
+Requirements
+------------
+* Linux or Mac OS X
 
-|               |``curl``|``mysql``|``zip``|
-|---------------|:------:|:-------:|:-----:|
-|``login.sh``   | ``X``  |         |       |
-|``info.sh``    | ``X``  |         |       |
-|``database.sh``| ``X``  | ``X``   |       |
-|``upload.sh``  | ``X``  |         | ``X`` |
-|``listing.sh`` | ``X``  |         |       |
+|           |curl|mysql|zip|
+|-----------|:--:|:---:|:-:|
+|login.sh   | X  |     |   |
+|info.sh    | X  |     |   |
+|database.sh| X  | X   |   |
+|upload.sh  | X  |     | X |
+|listing.sh | X  |     |   |
 
-``Specs``
----------
+Specs
+-----
     Basic specs of NET.CN's virtual hosting products:
     M2 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite / 500 MB Space
     M3 - Red Hat 5.4 / Apache 2.2 / PHP 5 / SQLite/MySQL / 1 GB Space
     Admin panel: FTP, online ZIP decompression, phpMyAdmin with queued MySQL backup.
     More info: http://www.net.cn/hosting/m3/
 
-``Developer``
--------------
-* ``caiguanhao``
+Developer
+---------
+* caiguanhao
