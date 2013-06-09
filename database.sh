@@ -157,12 +157,15 @@ elif [[ $TODO == "DROP" ]]; then
         exit 0
     fi
 
-    echo "Found ${#TABLES[@]} tables."
-
     WARN "WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
     WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
-    echo -n "Press Enter to continue; Ctrl-C to cancel. "
-    read
+    WARN "${DBN} CONTAINS ${#TABLES[@]} TABLES INCLUDING ${TABLES[0]}."
+    echo
+    while [[ $CONFIRM != $DBN ]]; do
+        printf "\e[1A"
+        echo "Type \"${DBN}\" and press Enter to continue; Ctrl-C to cancel."
+        read CONFIRM
+    done
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
