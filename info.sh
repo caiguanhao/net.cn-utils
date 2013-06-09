@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PWD="`pwd`"
+COOKIE="${PWD}/cookie"
 
 CURL=$(which curl)
 
@@ -124,8 +125,8 @@ get_value_from()
 if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexInfo" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ $INFO != \{*\} ]]; then
@@ -182,8 +183,8 @@ fi
 if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
 
     FTPLINK=`$CURL -s -L "${QUERY_URL}?action=GetWebFtpUrl" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#FTPLINK} -eq 0 ]] || [[ $FTPLINK == -1* ]]; then
@@ -206,8 +207,8 @@ fi
 if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexSpaceDiv" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
@@ -230,8 +231,8 @@ fi
 if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetIndexFlowDiv" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
@@ -253,8 +254,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART5 -eq 1 ]] || [[ $PART6 -eq 1 ]]
 then
 
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetDBList" \
-    -b "${PWD}/cookie" \
-    -c "${PWD}/cookie" \
+    -b "${COOKIE}" \
+    -c "${COOKIE}" \
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
@@ -294,8 +295,8 @@ then
         IFS=$'\r'
 
         PMA=`$CURL -s -L "${DBLINK}" \
-        -b "${PWD}/cookie" \
-        -c "${PWD}/cookie" \
+        -b "${COOKIE}" \
+        -c "${COOKIE}" \
         -A "${USER_AGENT}"`
 
         if [[ $PMA =~ token=[a-f0-9]{32} ]]; then # if logged in, log out.
@@ -304,13 +305,13 @@ then
             PMA_INDEX=${DBLINK%%\?*}
 
             PMA=`$CURL -s -L "${PMA_INDEX}?token=${TOKEN}&old_usr=foo" \
-            -b "${PWD}/cookie" \
-            -c "${PWD}/cookie" \
+            -b "${COOKIE}" \
+            -c "${COOKIE}" \
             -A "${USER_AGENT}"`
 
             PMA=`$CURL -s -L "${DBLINK}" \
-            -b "${PWD}/cookie" \
-            -c "${PWD}/cookie" \
+            -b "${COOKIE}" \
+            -c "${COOKIE}" \
             -A "${USER_AGENT}"`
         fi
 
