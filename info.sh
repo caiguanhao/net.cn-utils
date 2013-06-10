@@ -54,11 +54,14 @@ PART5_LONG=(    --phpmyadmin-link               --database-name             )
 
 PART6=0
 PART6_VAR=(     DBHOST                          DBUSER
-                DBPASS                          MYSQLDUMP                   )
+                DBPASS                          MYSQLDUMP
+                MYSQLCONNECT                                                )
 PART6_SHORT=(   -dbh                            -dbu
-                -dbp                            -csql                       )
+                -dbp                            -csql
+                -cmysql                                                     )
 PART6_LONG=(    --database-host                 --database-username
-                --database-password             --mysqldump                 )
+                --database-password             --mysqldump
+                --mysql-connect                                             )
 
 PART7=0
 PART7_VAR=(     SETCOOKIE                                                   )
@@ -342,6 +345,10 @@ then
         get_value_from PMA starting_from 'id="input_password"'
         DBPASS=${PMA%%\"*}
 
+        MYSQLCONNECT="mysql -v -A -h \"${DBHOST}\" \
+            -u \"${DBUSER}\" -p\"${DBPASS}\" \"${DBNAME}\""
+        MYSQLCONNECT=`echo "${MYSQLCONNECT}" | sed -e"s/  */ /g"`
+
         SGP=""
         mysqldump --set-gtid-purged=OFF >/dev/null 2>&1
         if [[ $? -eq 1 ]]; then
@@ -357,6 +364,7 @@ then
             echo "  Database User Name:       ${DBUSER}"
             echo "  Database Password:        ${DBPASS}"
             echo "  MySQL Backup Command:     ${MYSQLDUMP}"
+            echo "  MySQL Connect Command:    ${MYSQLCONNECT}"
         fi
     fi
 fi
@@ -408,6 +416,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
         echo
         echo "  -cftp, --ftp-mirror          Command to download all files"
         echo "  -csql, --mysqldump           Command to backup database"
+        echo "  -cmysql, --mysql-connect     Command to connect to database"
         echo "  -c, --cookie                 JavaScript to set cookie"
     fi
 fi
