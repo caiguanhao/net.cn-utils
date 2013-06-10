@@ -308,26 +308,30 @@ then
 
         IFS=$'\r'
 
+        # remove all previous phpmyadmin login info;
+        cat "${COOKIE}" | sed "/phpmyadmin/d" > "${COOKIE}.new"
+        mv "${COOKIE}.new" "${COOKIE}"
+
         PMA=`$CURL -s -L "${DBLINK}" \
         -b "${COOKIE}" \
         -c "${COOKIE}" \
         -A "${USER_AGENT}"`
 
-        if [[ $PMA =~ token=[a-f0-9]{32} ]]; then # if logged in, log out.
-            _PMA=${PMA%token=*}
-            TOKEN=${PMA:$(( ${#_PMA} + 6 )):32}
-            PMA_INDEX=${DBLINK%%\?*}
+        # if [[ $PMA =~ token=[a-f0-9]{32} ]]; then # if logged in, log out.
+        #     _PMA=${PMA%token=*}
+        #     TOKEN=${PMA:$(( ${#_PMA} + 6 )):32}
+        #     PMA_INDEX=${DBLINK%%\?*}
 
-            PMA=`$CURL -s -L "${PMA_INDEX}?token=${TOKEN}&old_usr=foo" \
-            -b "${COOKIE}" \
-            -c "${COOKIE}" \
-            -A "${USER_AGENT}"`
+        #     PMA=`$CURL -s -L "${PMA_INDEX}?token=${TOKEN}&old_usr=foo" \
+        #     -b "${COOKIE}" \
+        #     -c "${COOKIE}" \
+        #     -A "${USER_AGENT}"`
 
-            PMA=`$CURL -s -L "${DBLINK}" \
-            -b "${COOKIE}" \
-            -c "${COOKIE}" \
-            -A "${USER_AGENT}"`
-        fi
+        #     PMA=`$CURL -s -L "${DBLINK}" \
+        #     -b "${COOKIE}" \
+        #     -c "${COOKIE}" \
+        #     -A "${USER_AGENT}"`
+        # fi
 
         get_value_from PMA starting_from 'id="input_servername"'
         DBHOST=${PMA%%\"*}
