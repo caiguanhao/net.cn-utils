@@ -171,6 +171,10 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
 
     extract_value_of Statusname from INFO to STATUS
 
+    if [[ $STATUS == "运行" ]]; then
+        STATUS="Running"
+    fi
+
     IFS=$'\r'
     INFO=`$CURL -s -L "${QUERY_URL}?action=GetDomainBindList" \
     -b "${COOKIE}" \
