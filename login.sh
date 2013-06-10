@@ -56,6 +56,7 @@ IFS=$'\r'
 HEADER=`$CURL -I -s -L "http://cp.hichina.com/CheckCode.aspx" \
 -b "${PWD}/cookie" \
 -c "${PWD}/cookie" \
+-m 10 \
 -A "${USER_AGENT}"`
 
 CHECKCODE_POS=${HEADER%%CheckCode=*}
@@ -68,6 +69,7 @@ CHECKCODE=${CHECKCODE:0:${#CHECKCODE_POS}}
 
 if [[ ${#CHECKCODE} -eq 0 ]]; then
     echo "[Error] No verification code."
+    echo "[Error] Maybe your network is down?"
     exit 1
 fi
 
