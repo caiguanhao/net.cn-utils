@@ -1,0 +1,204 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: info.sh:34
+msgid "[Error] Install curl first."
+msgstr "[错误] 请先安装 curl 。"
+
+#: info.sh:43
+msgid "Timeout. You need to log in again."
+msgstr "登录超时。你需要重新登录。"
+
+#: info.sh:215
+msgid "Info for %s:"
+msgstr "%s的详细信息："
+
+#: info.sh:216
+msgid "  Product Type:             %s"
+msgstr "  空间类型：                 %s"
+
+#: info.sh:217
+msgid "  Valid From:               %s"
+msgstr "  起始时间：                 %s"
+
+#: info.sh:218
+msgid "  Valid To:                 %s"
+msgstr "  终止时间：                 %s"
+
+#: info.sh:219
+msgid "  Status:                   %s"
+msgstr "  状态：                     %s"
+
+#: info.sh:220
+msgid "  IP Address:               %s"
+msgstr "  IP地址：                   %s"
+
+#: info.sh:221
+msgid "  Operating System:         %s"
+msgstr "  操作系统：                 %s"
+
+#: info.sh:222
+msgid "  Programming Languages:    %s"
+msgstr "  已安装语言：               %s"
+
+#: info.sh:223
+msgid "  Web Link:                 %s"
+msgstr "  网址：                     %s"
+
+#: info.sh:224
+msgid "  Web Links:                %s"
+msgstr "  所有网址：                 %s"
+
+#: info.sh:247
+msgid "  FTP Link:                 %s"
+msgstr "  FTP地址：                  %s"
+
+#: info.sh:248
+msgid "  FTP Mirror Command:       %s"
+msgstr "  FTP备份命令：              %s"
+
+#: info.sh:272
+msgid "  Space Usage:              %s"
+msgstr "  空间使用情况：             %s"
+
+#: info.sh:293
+msgid "  Bandwidth Usage:          %s"
+msgstr "  带宽使用情况：             %s"
+
+#: info.sh:331
+msgid "  phpMyAdmin Link:          %s"
+msgstr "  phpMyAdmin管理链接：       %s"
+
+#: info.sh:332
+msgid "  Database Name:            %s"
+msgstr "  数据库名：                 %s"
+
+#: info.sh:393
+msgid "  Database Host:            %s"
+msgstr "  数据库主机：               %s"
+
+#: info.sh:394
+msgid "  Database User Name:       %s"
+msgstr "  数据库用户名：             %s"
+
+#: info.sh:395
+msgid "  Database Password:        %s"
+msgstr "  数据库密码：               %s"
+
+#: info.sh:396
+msgid "  MySQL Backup Command:     %s"
+msgstr "  MySQL备份命令：            %s"
+
+#: info.sh:397
+msgid "  MySQL Connect Command:    %s"
+msgstr "  MySQL连接命令：            %s"
+
+#: info.sh:411
+msgid "  Set Cookie:               %s"
+msgstr "  Cookie设置脚本：           %s"
+
+#: info.sh:423
+msgid "Usage: %s [OPTIONS/ITEMS...]"
+msgstr "使用方法：%s [选项/项目...]"
+
+#: info.sh:424
+msgid "Options:"
+msgstr "选项："
+
+#: info.sh:425
+msgid "  -h, --help                   Show this help and exit"
+msgstr "  -h, --help                   显示此帮助信息并退出"
+
+#: info.sh:426
+msgid "Items:"
+msgstr "项目："
+
+#: info.sh:427
+msgid "  -id, --site-id               User name"
+msgstr "  -id, --site-id               空间登录用户名"
+
+#: info.sh:428
+msgid "  -t, --type                   Type of virtual hosting"
+msgstr "  -t, --type                   虚拟空间类型"
+
+#: info.sh:429
+msgid "  -vf, --valid-from            Start date of the bill"
+msgstr "  -vf, --valid-from            帐单起始时间"
+
+#: info.sh:430
+msgid "  -vt, --valid-to              End date of the bill"
+msgstr "  -vt, --valid-to              帐单终止时间"
+
+#: info.sh:431
+msgid "  -s, --status                 Status text of system"
+msgstr "  -s, --status                 空间状态"
+
+#: info.sh:432
+msgid "  -ip, --ip-address            IP Address of virtual hosting"
+msgstr "  -ip, --ip-address            虚拟空间的IP地址"
+
+#: info.sh:433
+msgid "  -os, --system                Name of the operating system"
+msgstr "  -os, --system                空间操作系统名称"
+
+#: info.sh:434
+msgid "  -l, --languages              List of languages installed"
+msgstr "  -l, --languages              已安装的语言"
+
+#: info.sh:435
+msgid "  -web, --web-link             HTTP web link"
+msgstr "  -web, --web-link             HTTP网址"
+
+#: info.sh:436
+msgid "  -webs, --web-links           All links linked to this hosting"
+msgstr "  -webs, --web-links           所有与此空间有关联的网址"
+
+#: info.sh:437
+msgid "  -ftp, --ftp-link             FTP link to the server"
+msgstr "  -ftp, --ftp-link             空间的FTP链接"
+
+#: info.sh:438
+msgid "  -sp, --space-usage           Total space used"
+msgstr "  -sp, --space-usage           空间使用情况"
+
+#: info.sh:439
+msgid "  -bw, --bandwidth-usage       Bandwidth used in this month"
+msgstr "  -bw, --bandwidth-usage       当月带宽使用情况"
+
+#: info.sh:441
+msgid "  -pma, --phpmyadmin-link      URL to log in to phpMyAdmin"
+msgstr "  -pma, --phpmyadmin-link      登录phpMyAdmin的链接"
+
+#: info.sh:442
+msgid "  -dbn, --database-name        Name of the database"
+msgstr "  -dbn, --database-name        数据库名称"
+
+#: info.sh:443
+msgid "  -dbh, --database-host        Host to connect"
+msgstr "  -dbh, --database-host        数据库主机"
+
+#: info.sh:444
+msgid "  -dbu, --database-username    Username to connect to database"
+msgstr "  -dbu, --database-username    连接数据库时使用的用户名"
+
+#: info.sh:445
+msgid "  -dbp, --database-password    Password to connect to database"
+msgstr "  -dbp, --database-password    连接数据库时使用的密码"
+
+#: info.sh:447
+msgid "  -cftp, --ftp-mirror          Command to download all files"
+msgstr "  -cftp, --ftp-mirror          下载空间全部文件的FTP命令"
+
+#: info.sh:448
+msgid "  -csql, --mysqldump           Command to backup database"
+msgstr "  -csql, --mysqldump           备份数据库的命令"
+
+#: info.sh:449
+msgid "  -cmysql, --mysql-connect     Command to connect to database"
+msgstr "  -cmysql, --mysql-connect     本地登录远程数据库的命令"
+
+#: info.sh:450
+msgid "  -c, --cookie                 JavaScript to set cookie"
+msgstr "  -c, --cookie                 设置Cookie的JavaScript脚本"

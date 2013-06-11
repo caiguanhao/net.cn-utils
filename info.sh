@@ -1,12 +1,37 @@
 #!/bin/bash
 
+alias echo="echo" # turn shell built-in echo into $echo
+
 PWD="`pwd`"
 COOKIE="${PWD}/cookie"
 
+export TEXTDOMAINDIR="${PWD}/locale"
+export TEXTDOMAIN=$0
+
 CURL=$(which curl)
+GETTEXT=$(which gettext)
+
+echo()
+{
+    if [[ ${#@} -eq 0 ]]; then
+        printf "\n"
+    elif [[ ${#GETTEXT} -eq 0 ]]; then
+        if [[ $1 == "-n" ]]; then
+            printf "$2" ${@:3}
+        else
+            printf "$1\n" ${@:2}
+        fi
+    else
+        if [[ $1 == "-n" ]]; then
+            printf "`${GETTEXT} -s "$2"`" ${@:3}
+        else
+            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+        fi
+    fi
+}
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo $"Install curl first."
+    echo $"[Error] Install curl first."
     exit 1
 fi
 
@@ -16,6 +41,7 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
 NEED_LOGIN_AGIAN=$"Timeout. You need to log in again."
+NEED_LOGIN_AGIAN=`echo "${NEED_LOGIN_AGIAN}"`
 
 ARGUMENTS_COUNT=$#
 
@@ -186,16 +212,16 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     WEBLINKS="${INFO}"
 
     if [[ $PART1 -eq 0 ]]; then
-        echo $"Info for ${SITEID}:"
-        echo $"  Product Type:             ${TYPENAME}"
-        echo $"  Valid From:               ${OPENDATE}"
-        echo $"  Valid To:                 ${ENDDATE}"
-        echo $"  Status:                   ${STATUS}"
-        echo $"  IP Address:               ${SITEIP}"
-        echo $"  Operating System:         ${OSNAME}"
-        echo $"  Programming Languages:    ${SCRIPTS}"
-        echo $"  Web Link:                 ${WEBLINK}"
-        echo $"  Web Links:                ${WEBLINKS}"
+        echo $"Info for %s:" ${SITEID}
+        echo $"  Product Type:             %s" ${TYPENAME}
+        echo $"  Valid From:               %s" ${OPENDATE}
+        echo $"  Valid To:                 %s" ${ENDDATE}
+        echo $"  Status:                   %s" ${STATUS}
+        echo $"  IP Address:               %s" ${SITEIP}
+        echo $"  Operating System:         %s" ${OSNAME}
+        echo $"  Programming Languages:    %s" ${SCRIPTS}
+        echo $"  Web Link:                 %s" ${WEBLINK}
+        echo $"  Web Links:                %s" ${WEBLINKS}
     fi
 fi
 
@@ -218,8 +244,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
     FTPMIRROR=`echo "${FTPMIRROR}" | sed -e"s/  */ /g"`
 
     if [[ $PART2 -eq 0 ]]; then
-        echo $"  FTP Link:                 ${FTPLINK}"
-        echo $"  FTP Mirror Command:       ${FTPMIRROR}"
+        echo $"  FTP Link:                 %s" ${FTPLINK}
+        echo $"  FTP Mirror Command:       %s" ${FTPMIRROR}
     fi
 fi
 
@@ -243,7 +269,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     SPACEUSED="${SPACEUSED} total"
 
     if [[ $PART3 -eq 0 ]]; then
-        echo $"  Space Usage:              ${SPACEUSED}"
+        echo $"  Space Usage:              %s" ${SPACEUSED}
     fi
 fi
 
@@ -264,7 +290,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     BWUSED=${INFO##*>}
 
     if [[ $PART4 -eq 0 ]]; then
-        echo $"  Bandwidth Usage:          ${BWUSED}"
+        echo $"  Bandwidth Usage:          %s" ${BWUSED}
     fi
 fi
 
@@ -302,8 +328,8 @@ then
     DBLINK=${_INFO%%\'*}
 
     if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
-        echo $"  phpMyAdmin Link:          ${DBLINK}"
-        echo $"  Database Name:            ${DBNAME}"
+        echo $"  phpMyAdmin Link:          %s" ${DBLINK}
+        echo $"  Database Name:            %s" ${DBNAME}
     fi
 
     if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
@@ -364,11 +390,11 @@ then
         MYSQLDUMP=`echo "${MYSQLDUMP}" | sed -e"s/  */ /g"`
 
         if [[ $PART6 -eq 0 ]]; then
-            echo $"  Database Host:            ${DBHOST}"
-            echo $"  Database User Name:       ${DBUSER}"
-            echo $"  Database Password:        ${DBPASS}"
-            echo $"  MySQL Backup Command:     ${MYSQLDUMP}"
-            echo $"  MySQL Connect Command:    ${MYSQLCONNECT}"
+            echo $"  Database Host:            %s" ${DBHOST}
+            echo $"  Database User Name:       %s" ${DBUSER}
+            echo $"  Database Password:        %s" ${DBPASS}
+            echo $"  MySQL Backup Command:     %s" ${MYSQLDUMP}
+            echo $"  MySQL Connect Command:    %s" ${MYSQLCONNECT}
         fi
     fi
 fi
@@ -382,7 +408,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART7 -eq 1 ]]; then
     SETCOOKIE="document.cookie=\"${ASI}=${SETCOOKIE:1}\";"
 
     if [[ $PART7 -eq 0 ]]; then
-        echo $"  Set Cookie:               ${SETCOOKIE}"
+        echo $"  Set Cookie:               %s" ${SETCOOKIE}
     fi
 fi
 
@@ -394,7 +420,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
             echo "${!ARG}"
         done
     else
-        echo $"Usage: $0 [OPTIONS/ITEMS...]"
+        echo $"Usage: %s [OPTIONS/ITEMS...]" $0
         echo $"Options:"
         echo $"  -h, --help                   Show this help and exit"
         echo $"Items:"
