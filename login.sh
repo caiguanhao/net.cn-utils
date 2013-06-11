@@ -5,7 +5,7 @@ PWD="`pwd`"
 CURL=$(which curl)
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo "[Error] Install curl first."
+    echo $"[Error] Install curl first."
     exit 1
 fi
 
@@ -26,23 +26,23 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         *)
-            echo "Usage: $0 [OPTIONS...]"
-            echo "Options:"
-            echo "  -h, --help                   Show this help and exit"
-            echo "  -u, --username <username>    Log in with this user name"
-            echo "  -p, --password <password>    Log in with this password"
+            echo $"Usage: $0 [OPTIONS...]"
+            echo $"Options:"
+            echo $"  -h, --help                   Show this help and exit"
+            echo $"  -u, --username <username>    Log in with this user name"
+            echo $"  -p, --password <password>    Log in with this password"
             exit 0
             ;;
     esac
 done
 
 if [[ ${#USERNAME} -eq 0 ]]; then
-    echo -n "User name (hmu*): "
+    echo -n $"User name (hmu*): "
     read USERNAME
 fi
 
 if [[ ${#PASSWORD} -eq 0 ]]; then
-    echo -n "Password for ${USERNAME}: "
+    echo -n $"Password for ${USERNAME}: "
     read PASSWORD
 fi
 
@@ -68,8 +68,8 @@ CHECKCODE_POS=${CHECKCODE%%;*}
 CHECKCODE=${CHECKCODE:0:${#CHECKCODE_POS}}
 
 if [[ ${#CHECKCODE} -eq 0 ]]; then
-    echo "[Error] No verification code."
-    echo "[Error] Maybe your network is down?"
+    echo $"[Error] No verification code."
+    echo $"[Error] Maybe your network is down?"
     exit 1
 fi
 
@@ -116,8 +116,8 @@ OUTPUT=`$CURL -s "http://cp.hichina.com/login.aspx" \
 --data-urlencode "btnSubmit.y=8"`
 
 if [[ ! $OUTPUT -eq 302 ]]; then
-    echo "[Error] Exit with status code ${OUTPUT} (should be 302)."
-    echo "[Error] Maybe your user name or password is wrong?"
+    echo $"[Error] Exit with status code ${OUTPUT} (should be 302)."
+    echo $"[Error] Maybe your user name or password is wrong?"
     exit 1
 fi
 
@@ -128,9 +128,9 @@ OUTPUT=`$CURL -s "http://cp.hichina.com/index.aspx" \
 -A "${USER_AGENT}" | iconv -f gbk`
 
 if [[ ! $OUTPUT == *退出* ]]; then
-    echo "[Error] It seems you are not logged in."
+    echo $"[Error] It seems you are not logged in."
     exit 1
 fi
 
-echo "[OK] You are now logged in."
+echo $"[OK] You are now logged in."
 exit 0
