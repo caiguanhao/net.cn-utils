@@ -6,7 +6,7 @@ COOKIE="${PWD}/cookie"
 CURL=$(which curl)
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo "Install curl first."
+    echo $"Install curl first."
     exit 1
 fi
 
@@ -15,7 +15,7 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
-NEED_LOGIN_AGIAN="Timeout. You need to log in again."
+NEED_LOGIN_AGIAN=$"Timeout. You need to log in again."
 
 ARGUMENTS_COUNT=$#
 
@@ -186,16 +186,16 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     WEBLINKS="${INFO}"
 
     if [[ $PART1 -eq 0 ]]; then
-        echo "Info for ${SITEID}:"
-        echo "  Product Type:             ${TYPENAME}"
-        echo "  Valid From:               ${OPENDATE}"
-        echo "  Valid To:                 ${ENDDATE}"
-        echo "  Status:                   ${STATUS}"
-        echo "  IP Address:               ${SITEIP}"
-        echo "  Operating System:         ${OSNAME}"
-        echo "  Programming Languages:    ${SCRIPTS}"
-        echo "  Web Link:                 ${WEBLINK}"
-        echo "  Web Links:                ${WEBLINKS}"
+        echo $"Info for ${SITEID}:"
+        echo $"  Product Type:             ${TYPENAME}"
+        echo $"  Valid From:               ${OPENDATE}"
+        echo $"  Valid To:                 ${ENDDATE}"
+        echo $"  Status:                   ${STATUS}"
+        echo $"  IP Address:               ${SITEIP}"
+        echo $"  Operating System:         ${OSNAME}"
+        echo $"  Programming Languages:    ${SCRIPTS}"
+        echo $"  Web Link:                 ${WEBLINK}"
+        echo $"  Web Links:                ${WEBLINKS}"
     fi
 fi
 
@@ -218,8 +218,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
     FTPMIRROR=`echo "${FTPMIRROR}" | sed -e"s/  */ /g"`
 
     if [[ $PART2 -eq 0 ]]; then
-        echo "  FTP Link:                 ${FTPLINK}"
-        echo "  FTP Mirror Command:       ${FTPMIRROR}"
+        echo $"  FTP Link:                 ${FTPLINK}"
+        echo $"  FTP Mirror Command:       ${FTPMIRROR}"
     fi
 fi
 
@@ -243,7 +243,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     SPACEUSED="${SPACEUSED} total"
 
     if [[ $PART3 -eq 0 ]]; then
-        echo "  Space Usage:              ${SPACEUSED}"
+        echo $"  Space Usage:              ${SPACEUSED}"
     fi
 fi
 
@@ -264,7 +264,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     BWUSED=${INFO##*>}
 
     if [[ $PART4 -eq 0 ]]; then
-        echo "  Bandwidth Usage:          ${BWUSED}"
+        echo $"  Bandwidth Usage:          ${BWUSED}"
     fi
 fi
 
@@ -302,8 +302,8 @@ then
     DBLINK=${_INFO%%\'*}
 
     if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
-        echo "  phpMyAdmin Link:          ${DBLINK}"
-        echo "  Database Name:            ${DBNAME}"
+        echo $"  phpMyAdmin Link:          ${DBLINK}"
+        echo $"  Database Name:            ${DBNAME}"
     fi
 
     if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
@@ -364,11 +364,11 @@ then
         MYSQLDUMP=`echo "${MYSQLDUMP}" | sed -e"s/  */ /g"`
 
         if [[ $PART6 -eq 0 ]]; then
-            echo "  Database Host:            ${DBHOST}"
-            echo "  Database User Name:       ${DBUSER}"
-            echo "  Database Password:        ${DBPASS}"
-            echo "  MySQL Backup Command:     ${MYSQLDUMP}"
-            echo "  MySQL Connect Command:    ${MYSQLCONNECT}"
+            echo $"  Database Host:            ${DBHOST}"
+            echo $"  Database User Name:       ${DBUSER}"
+            echo $"  Database Password:        ${DBPASS}"
+            echo $"  MySQL Backup Command:     ${MYSQLDUMP}"
+            echo $"  MySQL Connect Command:    ${MYSQLCONNECT}"
         fi
     fi
 fi
@@ -382,7 +382,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART7 -eq 1 ]]; then
     SETCOOKIE="document.cookie=\"${ASI}=${SETCOOKIE:1}\";"
 
     if [[ $PART7 -eq 0 ]]; then
-        echo "  Set Cookie:               ${SETCOOKIE}"
+        echo $"  Set Cookie:               ${SETCOOKIE}"
     fi
 fi
 
@@ -394,33 +394,33 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
             echo "${!ARG}"
         done
     else
-        echo "Usage: $0 [OPTIONS/ITEMS...]"
-        echo "Options:"
-        echo "  -h, --help                   Show this help and exit"
-        echo "Items:"
-        echo "  -id, --site-id               User name"
-        echo "  -t, --type                   Type of virtual hosting"
-        echo "  -vf, --valid-from            Start date of the bill"
-        echo "  -vt, --valid-to              End date of the bill"
-        echo "  -s, --status                 Status text of system"
-        echo "  -ip, --ip-address            IP Address of virtual hosting"
-        echo "  -os, --system                Name of the operating system"
-        echo "  -l, --languages              List of languages installed"
-        echo "  -web, --web-link             HTTP web link"
-        echo "  -webs, --web-links           All links linked to this hosting"
-        echo "  -ftp, --ftp-link             FTP link to the server"
-        echo "  -sp, --space-usage           Total space used"
-        echo "  -bw, --bandwidth-usage       Bandwidth used in this month"
+        echo $"Usage: $0 [OPTIONS/ITEMS...]"
+        echo $"Options:"
+        echo $"  -h, --help                   Show this help and exit"
+        echo $"Items:"
+        echo $"  -id, --site-id               User name"
+        echo $"  -t, --type                   Type of virtual hosting"
+        echo $"  -vf, --valid-from            Start date of the bill"
+        echo $"  -vt, --valid-to              End date of the bill"
+        echo $"  -s, --status                 Status text of system"
+        echo $"  -ip, --ip-address            IP Address of virtual hosting"
+        echo $"  -os, --system                Name of the operating system"
+        echo $"  -l, --languages              List of languages installed"
+        echo $"  -web, --web-link             HTTP web link"
+        echo $"  -webs, --web-links           All links linked to this hosting"
+        echo $"  -ftp, --ftp-link             FTP link to the server"
+        echo $"  -sp, --space-usage           Total space used"
+        echo $"  -bw, --bandwidth-usage       Bandwidth used in this month"
         echo
-        echo "  -pma, --phpmyadmin-link      URL to log in to phpMyAdmin"
-        echo "  -dbn, --database-name        Name of the database"
-        echo "  -dbh, --database-host        Host to connect"
-        echo "  -dbu, --database-username    Username to connect to database"
-        echo "  -dbp, --database-password    Password to connect to database"
+        echo $"  -pma, --phpmyadmin-link      URL to log in to phpMyAdmin"
+        echo $"  -dbn, --database-name        Name of the database"
+        echo $"  -dbh, --database-host        Host to connect"
+        echo $"  -dbu, --database-username    Username to connect to database"
+        echo $"  -dbp, --database-password    Password to connect to database"
         echo
-        echo "  -cftp, --ftp-mirror          Command to download all files"
-        echo "  -csql, --mysqldump           Command to backup database"
-        echo "  -cmysql, --mysql-connect     Command to connect to database"
-        echo "  -c, --cookie                 JavaScript to set cookie"
+        echo $"  -cftp, --ftp-mirror          Command to download all files"
+        echo $"  -csql, --mysqldump           Command to backup database"
+        echo $"  -cmysql, --mysql-connect     Command to connect to database"
+        echo $"  -c, --cookie                 JavaScript to set cookie"
     fi
 fi
