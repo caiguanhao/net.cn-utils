@@ -12,14 +12,37 @@ NORMAL=`tput sgr0`
 INTERACTIVE=1
 OVERWRITE=1
 KEEPARCHIVE=0
+GETTEXT=$(which gettext)
+
+export TEXTDOMAINDIR="${PWD}/locale"
+export TEXTDOMAIN=$0
+
+echo()
+{
+    if [[ ${#@} -eq 0 ]]; then
+        printf "\n"
+    elif [[ ${#GETTEXT} -eq 0 ]]; then
+        if [[ $1 == "-n" ]]; then
+            printf "$2" ${@:3}
+        else
+            printf "$1\n" ${@:2}
+        fi
+    else
+        if [[ $1 == "-n" ]]; then
+            printf "`${GETTEXT} -s "$2"`" ${@:3}
+        else
+            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+        fi
+    fi
+}
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo "Install curl first."
+    echo $"[Error] Install curl first."
     exit 1
 fi
 
 if [[ ${#ZIP} -eq 0 ]]; then
-    echo "Install zip first."
+    echo $"[Error] Install zip first."
     exit 1
 fi
 
@@ -30,12 +53,12 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 HELP()
 {
-    echo $"Usage: $0 [OPTIONS...]"
+    echo $"Usage: %s [OPTIONS...]" $0
     echo $"Options:"
     echo $"  -h, --help                   Show this help and exit"
     echo $"  -f, -from <file>             File to upload, directory will be"
     echo $"                               compressed as zip file"
-    echo $"  -t, --to <path>              Remote path relative to ${REMOTE_DIR}"
+    echo $"  -t, --to <path>              Remote path relative to %s" ${REMOTE_DIR}
     echo $"  -e, --extract <file.zip>     Remote zip file to extract"
     echo $"  -d, --destination <path>     Extract files to path"
     echo $"  -s, --no-overwrite           Do not overwrite existing files"
@@ -45,13 +68,30 @@ HELP()
     exit 0
 }
 
+GET_WIDTH_OF()
+{
+    local cwidth=0
+    local twidth=0
+    for (( i = 0; i < ${#1}; i++ )); do
+        cwidth=$(printf "${1:${i}:1}" | wc -c)
+        if [[ $cwidth -eq 1 ]]; then
+            let "twidth += 1"
+        else
+            let "twidth = twidth + cwidth - 1"
+        fi
+    done
+    eval "$3=\$twidth"
+}
+
 INFORM()
 {
+    INFORM_TEXT="`echo "$1" ${@:2}`"
+    GET_WIDTH_OF "$INFORM_TEXT" TO INFORM_TEXT_WIDTH
     printf "\e[1;33;42m"
-    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    FRONT_SPACES=$(( ($COLS - $INFORM_TEXT_WIDTH) / 2 ))
     printf "${BOLD}%*s" $FRONT_SPACES
-    printf "${1}"
-    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${INFORM_TEXT}"
+    printf "%*s" $(( $COLS - $INFORM_TEXT_WIDTH - $FRONT_SPACES ))
     printf "${NORMAL}\n"
 }
 
@@ -64,7 +104,7 @@ while [[ $# -gt 0 ]]; do
             if [[ $# -gt 0 ]]; then
                 FROM="$1"
                 if [[ ! -e $FROM ]]; then
-                    echo $"[Error] $FROM : No such file or directory."
+                    echo $"[Error] %s : No such file or directory." $FROM
                     exit 1
                 fi
                 shift
@@ -123,7 +163,7 @@ done
 INFO=(`$BASH "$PWD/$INFO_SH" -ftp`)
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] $PWD/$INFO_SH : ${INFO[@]}"
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" ${INFO[@]}
     exit 1
 fi
 
@@ -135,7 +175,7 @@ if [[ ${#FROM} -gt 0 ]]; then
         INFORM $"CREATING ARCHIVE"
         TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
         TMP_FILE="/tmp/$TMP_FILE.zip"
-        echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
+        printf "$BOLD $ $ZIP -9 -q -r ${TMP_FILE} $FROM$NORMAL [Enter/Ctrl-C] ?\n"
         [ $INTERACTIVE -eq 1 ] && read
         $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
         FROM=$TMP_FILE
@@ -160,8 +200,8 @@ if [[ ${#FROM} -gt 0 ]]; then
 
     INFORM $"UPLOADING FILE"
 
-    echo -n $BOLD $ $CURL --ftp-create-dirs -T "${FROM} "
-    echo "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
+    printf "$BOLD $ $CURL --ftp-create-dirs -T ${FROM} "
+    printf "${FTP}${REMOTE_DIR}${TO}$NORMAL [Enter/Ctrl-C] ?\n"
     [ $INTERACTIVE -eq 1 ] && read
 
     $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"
@@ -198,7 +238,7 @@ if [[ $EXTRACT -eq 1 ]]; then
     -w "%{http_code}"`
 
     if [[ $OUTPUT -ne 200 ]]; then
-        echo $"[Exception] Exit with status code ${OUTPUT} (should be 200)."
+        echo $"[Exception] Exit with status code %s (should be 200)." ${OUTPUT}
         if [[ $OUTPUT -eq 302 ]]; then
             echo $"[Exception] You may need to log in again."
         fi
@@ -207,11 +247,12 @@ if [[ $EXTRACT -eq 1 ]]; then
 
     INFORM $"EXTRACTING ARCHIVE"
 
-    echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
-    -d "action=uncommpressfilesold" \
-    -d "serverfilename=${EXTRACT_SRC}" \
-    -d "serverdir=${EXTRACT_DST}" \
-    -d "iscover=${OVERWRITE}" ...$NORMAL "[Enter/Ctrl-C] ?"
+    printf "$BOLD $ $CURL -s -G \"${QUERY_URL}\" \
+    -d \"action=uncommpressfilesold\" \
+    -d \"serverfilename=${EXTRACT_SRC}\" \
+    -d \"serverdir=${EXTRACT_DST}\" \
+    -d \"iscover=${OVERWRITE}\" ...$NORMAL [Enter/Ctrl-C] ?\n" | \
+    sed -e"s/  */ /g"
     [ $INTERACTIVE -eq 1 ] && read
 
     OUTPUT=`$CURL -s -G "${QUERY_URL}" \
@@ -226,18 +267,19 @@ if [[ $EXTRACT -eq 1 ]]; then
     if [[ $OUTPUT == *200\|OK* ]]; then
         echo $"[OK] File has been successfully extracted."
     else
-        echo $"[Error] Fail to extract file. Message: $OUTPUT"
+        echo $"[Error] Fail to extract file. Message: %s" $OUTPUT
         exit 1
     fi
 
     if [[ $KEEPARCHIVE -ne 1 ]]; then
         INFORM $"DELETING ARCHIVE"
 
-        echo $BOLD $ $CURL -s "${FTP}" \
-        -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" $NORMAL "[Enter/Ctrl-C] ?"
+        printf "$BOLD $ $CURL -s \"${FTP}\" \
+        -X \"DELE ${REMOTE_DIR}${EXTRACT_SRC}\"$NORMAL [Enter/Ctrl-C] ?\n" | \
+        sed -e"s/  */ /g"
         [ $INTERACTIVE -eq 1 ] && read
 
-        echo -n $"Deleting ${REMOTE_DIR}${EXTRACT_SRC} ... "
+        echo -n $"Deleting %s ... " "${REMOTE_DIR}${EXTRACT_SRC}"
         OUTPUT=`$CURL -s "${FTP}" -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" \
         -w "%{http_code}" -o /dev/null`
         echo $"Done"
@@ -245,7 +287,7 @@ if [[ $EXTRACT -eq 1 ]]; then
         if [[ $OUTPUT -eq 250 ]]; then
             echo $"[OK] File has been deleted."
         else
-            echo $"[Exception] Exit with FTP return code $OUTPUT (should be 250)."
+            echo $"[Exception] Exit with FTP return code %s (should be 250)." $OUTPUT
             exit 1
         fi
     fi
