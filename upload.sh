@@ -30,18 +30,18 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 HELP()
 {
-    echo "Usage: $0 [OPTIONS...]"
-    echo "Options:"
-    echo "  -h, --help                   Show this help and exit"
-    echo "  -f, -from <file>             File to upload, directory will be 
-                               compressed as zip file"
-    echo "  -t, --to <path>              Remote path relative to ${REMOTE_DIR}"
-    echo "  -e, --extract <file.zip>     Remote zip file to extract"
-    echo "  -d, --destination <path>     Extract files to path"
-    echo "  -s, --no-overwrite           Do not overwrite existing files"
-    echo "  -k, --keep-archive           Do not delete the archive file"
-    echo "  -y, --assumeyes, -n, --non-interactive"
-    echo "                               Execute commands without confirmations"
+    echo $"Usage: $0 [OPTIONS...]"
+    echo $"Options:"
+    echo $"  -h, --help                   Show this help and exit"
+    echo $"  -f, -from <file>             File to upload, directory will be"
+    echo $"                               compressed as zip file"
+    echo $"  -t, --to <path>              Remote path relative to ${REMOTE_DIR}"
+    echo $"  -e, --extract <file.zip>     Remote zip file to extract"
+    echo $"  -d, --destination <path>     Extract files to path"
+    echo $"  -s, --no-overwrite           Do not overwrite existing files"
+    echo $"  -k, --keep-archive           Do not delete the archive file"
+    echo $"  -y, --assumeyes, -n, --non-interactive"
+    echo $"                               Execute commands without confirmations"
     exit 0
 }
 
@@ -64,7 +64,7 @@ while [[ $# -gt 0 ]]; do
             if [[ $# -gt 0 ]]; then
                 FROM="$1"
                 if [[ ! -e $FROM ]]; then
-                    echo "[Error] $FROM : No such file or directory."
+                    echo $"[Error] $FROM : No such file or directory."
                     exit 1
                 fi
                 shift
@@ -85,10 +85,10 @@ while [[ $# -gt 0 ]]; do
                     EXTRACT_SRC="$1"
                     shift
                 else
-                    echo "[Error] -e, --extract:"
-                    echo "[Error] You must specify the name of remote zip file."
-                    echo "[Error] Remove this option if you want to extract"
-                    echo "[Error] the zip file that will be uploaded."
+                    echo $"[Error] -e, --extract:"
+                    echo $"[Error] You must specify the name of remote zip file."
+                    echo $"[Error] Remove this option if you want to extract"
+                    echo $"[Error] the zip file that will be uploaded."
                     exit 1
                 fi
             fi
@@ -123,7 +123,7 @@ done
 INFO=(`$BASH "$PWD/$INFO_SH" -ftp`)
 
 if [[ $? -ne 0 ]]; then
-    echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
+    echo $"[Error] $PWD/$INFO_SH : ${INFO[@]}"
     exit 1
 fi
 
@@ -132,7 +132,7 @@ FTP="${INFO[0]}"
 if [[ ${#FROM} -gt 0 ]]; then
     TMP_FILE=""
     if [[ -d $FROM ]]; then
-        INFORM "CREATING ARCHIVE"
+        INFORM $"CREATING ARCHIVE"
         TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
         TMP_FILE="/tmp/$TMP_FILE.zip"
         echo $BOLD $ $ZIP -9 -q -r "${TMP_FILE}" "$FROM"$NORMAL "[Enter/Ctrl-C] ?"
@@ -158,7 +158,7 @@ if [[ ${#FROM} -gt 0 ]]; then
         TO="/${TO}"
     fi
 
-    INFORM "UPLOADING FILE"
+    INFORM $"UPLOADING FILE"
 
     echo -n $BOLD $ $CURL --ftp-create-dirs -T "${FROM} "
     echo "${FTP}${REMOTE_DIR}${TO}"$NORMAL "[Enter/Ctrl-C] ?"
@@ -179,7 +179,7 @@ if [[ $EXTRACT -eq 1 ]]; then
         EXTRACT_SRC=${TO}
     fi
     if [[ ${#EXTRACT_SRC} -eq 0 ]]; then
-        echo "[Error] Fail to extract file: no input file."
+        echo $"[Error] Fail to extract file: no input file."
         exit 1
     fi
     if [[ ${EXTRACT_SRC:0:1} != "/" ]]; then
@@ -198,14 +198,14 @@ if [[ $EXTRACT -eq 1 ]]; then
     -w "%{http_code}"`
 
     if [[ $OUTPUT -ne 200 ]]; then
-        echo "[Exception] Exit with status code ${OUTPUT} (should be 200)."
+        echo $"[Exception] Exit with status code ${OUTPUT} (should be 200)."
         if [[ $OUTPUT -eq 302 ]]; then
-            echo "[Exception] You may need to log in again."
+            echo $"[Exception] You may need to log in again."
         fi
         exit 1
     fi
 
-    INFORM "EXTRACTING ARCHIVE"
+    INFORM $"EXTRACTING ARCHIVE"
 
     echo $BOLD $ $CURL -s -G "${QUERY_URL}" \
     -d "action=uncommpressfilesold" \
@@ -224,28 +224,28 @@ if [[ $EXTRACT -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ $OUTPUT == *200\|OK* ]]; then
-        echo "[OK] File has been successfully extracted."
+        echo $"[OK] File has been successfully extracted."
     else
-        echo "[Error] Fail to extract file. Message: $OUTPUT"
+        echo $"[Error] Fail to extract file. Message: $OUTPUT"
         exit 1
     fi
 
     if [[ $KEEPARCHIVE -ne 1 ]]; then
-        INFORM "DELETING ARCHIVE"
+        INFORM $"DELETING ARCHIVE"
 
         echo $BOLD $ $CURL -s "${FTP}" \
         -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" $NORMAL "[Enter/Ctrl-C] ?"
         [ $INTERACTIVE -eq 1 ] && read
 
-        echo -n "Deleting ${REMOTE_DIR}${EXTRACT_SRC} ... "
+        echo -n $"Deleting ${REMOTE_DIR}${EXTRACT_SRC} ... "
         OUTPUT=`$CURL -s "${FTP}" -X "DELE ${REMOTE_DIR}${EXTRACT_SRC}" \
         -w "%{http_code}" -o /dev/null`
-        echo "Done"
+        echo $"Done"
 
         if [[ $OUTPUT -eq 250 ]]; then
-            echo "[OK] File has been deleted."
+            echo $"[OK] File has been deleted."
         else
-            echo "[Exception] Exit with FTP return code $OUTPUT (should be 250)."
+            echo $"[Exception] Exit with FTP return code $OUTPUT (should be 250)."
             exit 1
         fi
     fi
