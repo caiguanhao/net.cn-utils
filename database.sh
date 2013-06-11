@@ -58,13 +58,30 @@ NEW_TODO()
     TODO=$1
 }
 
+GET_WIDTH_OF()
+{
+    local cwidth=0
+    local twidth=0
+    for (( i = 0; i < ${#1}; i++ )); do
+        cwidth=$(printf "${1:${i}:1}" | wc -c)
+        if [[ $cwidth -eq 1 ]]; then
+            let "twidth += 1"
+        else
+            let "twidth = twidth + cwidth - 1"
+        fi
+    done
+    eval "$3=\$twidth"
+}
+
 WARN()
 {
+    WARN_TEXT="`echo "$1" ${@:2}`"
+    GET_WIDTH_OF "$WARN_TEXT" TO WARN_TEXT_WIDTH
     printf "\e[1;33;41m"
-    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    FRONT_SPACES=$(( ($COLS - $WARN_TEXT_WIDTH) / 2 ))
     printf "${BOLD}%*s" $FRONT_SPACES
-    printf "${1}"
-    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${WARN_TEXT}"
+    printf "%*s" $(( $COLS - $WARN_TEXT_WIDTH - $FRONT_SPACES ))
     printf "${NORMAL}\n"
 }
 
@@ -186,7 +203,7 @@ elif [[ $TODO == "DROP" ]]; then
     echo
     while [[ $CONFIRM != $DBN ]]; do
         printf "\e[1A"
-        echo $"Type \"%s\" and press Enter to continue; Ctrl-C to cancel." ${DBN}
+        echo $"Type %s and press Enter to continue; Ctrl-C to cancel." "${BOLD}${DBN}${NORMAL}"
         read CONFIRM
     done
     for (( i = $COUNTDOWN; i >= 0; i-- )); do

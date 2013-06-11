@@ -1,0 +1,125 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: database.sh:37
+msgid "[Error] Install curl first."
+msgstr "[错误] 请先安装 curl 。"
+
+#: database.sh:44
+msgid "[Error] Install mysql (client) first."
+msgstr "[错误] 请先安装 mysql 。"
+
+#: database.sh:56
+msgid "One database action at a time."
+msgstr "[错误] 请勿同时执行多个数据库操作。"
+
+#: database.sh:108
+msgid "[Error] %s : File does not exist."
+msgstr "[错误] %s : 文件不存在。"
+
+#: database.sh:133
+msgid "Usage: %s [OPTIONS...]"
+msgstr "使用方法：%s [选项...]"
+
+#: database.sh:134
+msgid "Options:"
+msgstr "选项："
+
+#: database.sh:135
+msgid "  -h, --help                   Show this help and exit"
+msgstr "  -h, --help                   显示此帮助信息并退出"
+
+#: database.sh:136
+msgid "  -al, -la, --list-all         List all tables in database"
+msgstr "  -al, -la, --list-all         列出所有数据库表"
+
+#: database.sh:137
+msgid "  -b, --backup <file>          Backup database to file"
+msgstr "  -b, --backup <文件>          备份数据库到此文件"
+
+#: database.sh:138
+msgid "  -d, --drop, --delete         Drop all tables in database"
+msgstr "  -d, --drop, --delete         删除所有数据库表"
+
+#: database.sh:139
+msgid "  -i, --import <file>          Import and execute SQL queries"
+msgstr "  -i, --import <文件>          将此SQL文件导入到数据库"
+
+#: database.sh:140
+msgid "  -v, --verbose                Show more status if possible"
+msgstr "  -v, --verbose                尽量显示更多信息"
+
+#: database.sh:147
+msgid "[Error] %s : %s"
+msgstr "[错误] %s : %s"
+
+#: database.sh:164
+msgid "Database '%s' contains %s tables."
+msgstr "数据库 %s 含有 %s 个表。"
+
+#: database.sh:185
+msgid "[OK] Your database has been successfully backed up to %s ."
+msgstr "[正常] 你的数据库已成功备份到 %s 。"
+
+#: database.sh:187
+msgid "[Error] %s is empty."
+msgstr "[错误] %s 是个空文件。"
+
+#: database.sh:196
+msgid "No tables in the database. Nothing to drop."
+msgstr "数据库中没有表，所以没有表可删除。"
+
+#: database.sh:200
+msgid "WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
+msgstr "警告：数据库中所有资料将被删除！"
+
+#: database.sh:201
+msgid ""
+"THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
+msgstr "这是个不可逆转的操作。请确保你已备份了当中重要的资料。"
+
+#: database.sh:202
+msgid "%s CONTAINS %s TABLES INCLUDING %s."
+msgstr "%s 包含 %s 个表，包括 %s 。"
+
+#: database.sh:206
+msgid "Type %s and press Enter to continue; Ctrl-C to cancel."
+msgstr "输入 %s 并按 Enter 继续；按 Ctrl-C 取消。"
+
+#: database.sh:213
+msgid "Start dropping tables in %s seconds... Ctrl-C to cancel."
+msgstr "%s秒后开始删除表... 按 Ctrl-C 取消"
+
+#: database.sh:219
+msgid "Dropping table %s %s ... "
+msgstr "删除表 %s %s ..."
+
+#: database.sh:223 database.sh:245 database.sh:265
+msgid "Done"
+msgstr "完成"
+
+#: database.sh:225
+msgid "Fail"
+msgstr "失败"
+
+#: database.sh:234
+msgid "Logging into phpMyAdmin... "
+msgstr "正在登录 phpMyAdmin ... "
+
+#: database.sh:248
+msgid "[Error] %s : Login failed!"
+msgstr "[错误] %s : 登录失败！"
+
+#: database.sh:257
+msgid "Sending SQL queries... "
+msgstr "正在发送 SQL 查询... "
+
+#: database.sh:268
+msgid "[Exception] Response content does not contain any notices."
+msgstr "[例外] 返回的内容中没有包含任何提示。"
+
+#: database.sh:277
+msgid "phpMyAdmin says: %s."
+msgstr "phpMyAdmin 返回了：%s 。"
