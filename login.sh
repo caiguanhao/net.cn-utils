@@ -1,8 +1,31 @@
 #!/bin/bash
 
+alias ECHO="echo" # shell built-in echo
+
 PWD="`pwd`"
 
+export TEXTDOMAINDIR="${PWD}/locale"
+export TEXTDOMAIN=$0
+
 CURL=$(which curl)
+GETTEXT=$(which gettext)
+
+echo()
+{
+    if [[ ${#GETTEXT} -eq 0 ]]; then
+        if [[ $1 == "-n" ]]; then
+            printf "$2" ${@:3}
+        else
+            printf "$1\n" ${@:2}
+        fi
+    else
+        if [[ $1 == "-n" ]]; then
+            printf "`${GETTEXT} -s "$2"`" ${@:3}
+        else
+            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+        fi
+    fi
+}
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo $"[Error] Install curl first."
@@ -26,7 +49,7 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         *)
-            echo $"Usage: $0 [OPTIONS...]"
+            echo $"Usage: %s [OPTIONS...]" $0
             echo $"Options:"
             echo $"  -h, --help                   Show this help and exit"
             echo $"  -u, --username <username>    Log in with this user name"
@@ -42,14 +65,14 @@ if [[ ${#USERNAME} -eq 0 ]]; then
 fi
 
 if [[ ${#PASSWORD} -eq 0 ]]; then
-    echo -n $"Password for ${USERNAME}: "
+    echo -n $"Password for %s: " ${USERNAME}
     read PASSWORD
 fi
 
 USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) \
 AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
-echo > "${PWD}/cookie"
+ECHO > "${PWD}/cookie"
 
 IFS=$'\r'
 
@@ -116,7 +139,7 @@ OUTPUT=`$CURL -s "http://cp.hichina.com/login.aspx" \
 --data-urlencode "btnSubmit.y=8"`
 
 if [[ ! $OUTPUT -eq 302 ]]; then
-    echo $"[Error] Exit with status code ${OUTPUT} (should be 302)."
+    echo $"[Error] Exit with status code %s (should be 302)." ${OUTPUT}
     echo $"[Error] Maybe your user name or password is wrong?"
     exit 1
 fi
