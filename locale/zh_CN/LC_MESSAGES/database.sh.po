@@ -90,7 +90,7 @@ msgstr "输入 %s 并按 Enter 继续；按 Ctrl-C 取消。"
 
 #: database.sh:213
 msgid "Start dropping tables in %s seconds... Ctrl-C to cancel."
-msgstr "%s秒后开始删除表... 按 Ctrl-C 取消"
+msgstr "%s秒后开始删除表... 按 Ctrl-C 取消。"
 
 #: database.sh:219
 msgid "Dropping table %s %s ... "
