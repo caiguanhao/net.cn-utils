@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: listing.sh:17
+msgid "[Error] Install curl first."
+msgstr "[错误] 请先安装 curl 。"
+
+#: listing.sh:24
+msgid "One action at a time."
+msgstr "同一时间只能执行一个命令。"
+
+#: listing.sh:41
+msgid "Usage: %s [OPTIONS...]"
+msgstr "使用方法：%s [选项...]"
+
+#: listing.sh:42
+msgid "Options:"
+msgstr "选项："
+
+#: listing.sh:43
+msgid "  -h, --help                   Show this help and exit"
+msgstr "  -h, --help                   显示此帮助信息并退出"
+
+#: listing.sh:44
+msgid "  -l, --list <path>            List of contents in path"
+msgstr "  -l, --list <路径>            列出此位置下的文件"
+
+#: listing.sh:45
+msgid "  -rm-rf, --remove-all         Delete everything on server"
+msgstr "  -rm-rf, --remove-all         删除空间上所有文件"
+
+#: listing.sh:77
+msgid "[Error] %s : %s"
+msgstr "[错误] %s : %s"
+
+#: listing.sh:99
+msgid "%s returned %s items with status code %s."
+msgstr "%s 返回了 %s 个项目，返回的状态码是 %s 。"
+
+#: listing.sh:103
+msgid "%s returned status code %s."
+msgstr "%s 返回了状态码 %s 。"
+
+#: listing.sh:109
+msgid "WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
+msgstr "警告：所有文件和目录都会被删除！"
+
+#: listing.sh:110
+msgid ""
+"THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
+msgstr "这是个不可逆转的操作。请确保你已备份了当中重要的文件。"
+
+#: listing.sh:111
+msgid "CURRENT SPACE USAGE OF %s: %s."
+msgstr "当前 %s 的空间使用状况：%s 。"
+
+#: listing.sh:115
+msgid "Type %s and press Enter to continue; Ctrl-C to cancel."
+msgstr "输入 %s 并按 Enter 继续；按 Ctrl-C 取消。"
+
+#: listing.sh:122
+msgid "Start removing all files on server in %s seconds... Ctrl-C to cancel."
+msgstr "%s秒后开始删除所有文件... 按 Ctrl-C 取消。"
+
+#: listing.sh:125
+msgid "Uploading self-deleting script... "
+msgstr "正在上传自我删除脚本... "
+
+#: listing.sh:128 listing.sh:131
+msgid "Done"
+msgstr "完成"
+
+#: listing.sh:129
+msgid "Deleting all files... "
+msgstr "正在删除所有文件... "

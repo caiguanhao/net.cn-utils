@@ -11,7 +11,31 @@ REMOTE_DIR="/htdocs"
 TODO=""
 PATHTOLIST="/"
 
+export TEXTDOMAINDIR="${PWD}/locale"
+export TEXTDOMAIN=$0
+
 CURL=$(which curl)
+GETTEXT=$(which gettext)
+
+echo()
+{
+    IFS=$' '
+    if [[ ${#@} -eq 0 ]]; then
+        printf "\n"
+    elif [[ ${#GETTEXT} -eq 0 ]]; then
+        if [[ $1 == "-n" ]]; then
+            printf "$2" ${@:3}
+        else
+            printf "$1\n" ${@:2}
+        fi
+    else
+        if [[ $1 == "-n" ]]; then
+            printf "`${GETTEXT} -s "$2"`" ${@:3}
+        else
+            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+        fi
+    fi
+}
 
 if [[ ${#CURL} -eq 0 ]]; then
     echo $"[Error] Install curl first."
@@ -26,19 +50,36 @@ NEW_TODO()
     TODO=$1
 }
 
+GET_WIDTH_OF()
+{
+    local cwidth=0
+    local twidth=0
+    for (( i = 0; i < ${#1}; i++ )); do
+        cwidth=$(printf "${1:${i}:1}" | wc -c)
+        if [[ $cwidth -eq 1 ]]; then
+            let "twidth += 1"
+        else
+            let "twidth = twidth + cwidth - 1"
+        fi
+    done
+    eval "$3=\$twidth"
+}
+
 WARN()
 {
+    WARN_TEXT="`echo "$1" ${@:2}`"
+    GET_WIDTH_OF "$WARN_TEXT" TO WARN_TEXT_WIDTH
     printf "\e[1;33;41m"
-    FRONT_SPACES=$(( ($COLS - ${#1}) / 2 ))
+    FRONT_SPACES=$(( ($COLS - $WARN_TEXT_WIDTH) / 2 ))
     printf "${BOLD}%*s" $FRONT_SPACES
-    printf "${1}"
-    printf "%*s" $(( $COLS - ${#1} - $FRONT_SPACES ))
+    printf "${WARN_TEXT}"
+    printf "%*s" $(( $COLS - $WARN_TEXT_WIDTH - $FRONT_SPACES ))
     printf "${NORMAL}\n"
 }
 
 HELP()
 {
-    echo $"Usage: $0 [OPTIONS...]"
+    echo $"Usage: %s [OPTIONS...]" $0
     echo $"Options:"
     echo $"  -h, --help                   Show this help and exit"
     echo $"  -l, --list <path>            List of contents in path"
@@ -74,7 +115,7 @@ IFS=$'\n'
 INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -id -sp`)
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] $PWD/$INFO_SH : ${INFO[@]}"
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${INFO[@]}"
     exit 1
 fi
 
@@ -96,11 +137,11 @@ if [[ $TODO == "LIST" ]]; then
     FTP_DSP="${FTP}${REMOTE_DIR}${PATHTOLIST}"
     FTP_DSP="ftp://${FTP_DSP##*@}"
     if [[ ${STATUS:0:1} -eq 2 ]]; then
-        echo $"$FTP_DSP returned ${#LIST[@]} items with status code $STATUS."
+        echo $"%s returned %s items with status code %s." $FTP_DSP ${#LIST[@]} $STATUS
         IFS=$'\n'
         echo "${LIST[*]}"
     else
-        echo $"$FTP_DSP returned status code $STATUS."
+        echo $"%s returned status code %s." $FTP_DSP $STATUS
     fi
 fi
 
@@ -108,18 +149,18 @@ if [[ $TODO == "RMRF" ]]; then
 
     WARN $"WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
     WARN $"THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
-    WARN $(echo $"CURRENT SPACE USAGE OF ${ID}: ${SPACE}." | tr '[a-z]' '[A-Z]')
+    WARN $(echo $"CURRENT SPACE USAGE OF %s: %s." ${ID} ${SPACE} | tr '[a-z]' '[A-Z]')
     echo
     while [[ $CONFIRM != $ID ]]; do
         printf "\e[1A"
-        echo $"Type ${ID} and press Enter to continue; Ctrl-C to cancel."
+        echo $"Type %s and press Enter to continue; Ctrl-C to cancel." "${BOLD}${ID}${NORMAL}"
         read CONFIRM
     done
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
         fi
-        echo $"Start removing all files on server in ${i} seconds... Ctrl-C to cancel."
+        echo $"Start removing all files on server in %s seconds... Ctrl-C to cancel." ${i}
         sleep 1
     done
     echo -n $"Uploading self-deleting script... "
