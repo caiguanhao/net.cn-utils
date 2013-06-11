@@ -8,17 +8,40 @@ COLS=`tput cols`
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
 
+export TEXTDOMAINDIR="${PWD}/locale"
+export TEXTDOMAIN=$0
+
 CURL=$(which curl)
+GETTEXT=$(which gettext)
+
+echo()
+{
+    if [[ ${#@} -eq 0 ]]; then
+        printf "\n"
+    elif [[ ${#GETTEXT} -eq 0 ]]; then
+        if [[ $1 == "-n" ]]; then
+            printf "$2" ${@:3}
+        else
+            printf "$1\n" ${@:2}
+        fi
+    else
+        if [[ $1 == "-n" ]]; then
+            printf "`${GETTEXT} -s "$2"`" ${@:3}
+        else
+            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+        fi
+    fi
+}
 
 if [[ ${#CURL} -eq 0 ]]; then
-    echo "Install curl first."
+    echo $"[Error] Install curl first."
     exit 1
 fi
 
 MYSQL=$(which mysql)
 
 if [[ ${#MYSQL} -eq 0 ]]; then
-    echo "Install mysql (client) first."
+    echo $"[Error] Install mysql (client) first."
     exit 1
 fi
 
@@ -30,7 +53,7 @@ SHOWHELP=0
 NEW_TODO()
 {
     if [[ ${#TODO} -gt 0 ]]; then
-        echo "One database action at a time." && exit 1
+        echo $"One database action at a time." && exit 1
     fi
     TODO=$1
 }
@@ -65,7 +88,7 @@ while [[ $# -gt 0 ]]; do
             if [[ $# -gt 0 ]]; then
                 SQL_INPUT="$1"
                 if [[ ! -f $SQL_INPUT ]]; then
-                    echo "[Error] $SQL_INPUT : File does not exist."
+                    echo $"[Error] %s : File does not exist." $SQL_INPUT
                     exit 1
                 fi
                 shift
@@ -90,21 +113,21 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
-    echo "Usage: $0 [OPTIONS...]"
-    echo "Options:"
-    echo "  -h, --help                   Show this help and exit"
-    echo "  -al, -la, --list-all         List all tables in database"
-    echo "  -b, --backup <file>          Backup database to file"
-    echo "  -d, --drop, --delete         Drop all tables in database"
-    echo "  -i, --import <file>          Import and execute SQL queries"
-    echo "  -v, --verbose                Show more status if possible"
+    echo $"Usage: %s [OPTIONS...]" $0
+    echo $"Options:"
+    echo $"  -h, --help                   Show this help and exit"
+    echo $"  -al, -la, --list-all         List all tables in database"
+    echo $"  -b, --backup <file>          Backup database to file"
+    echo $"  -d, --drop, --delete         Drop all tables in database"
+    echo $"  -i, --import <file>          Import and execute SQL queries"
+    echo $"  -v, --verbose                Show more status if possible"
     exit 0
 fi
 
 INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma`)
 
 if [[ $? -ne 0 ]]; then
-    echo "[Error] $PWD/$INFO_SH : ${INFO[@]}"
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" ${INFO[@]}
     exit 1
 fi
 
@@ -121,7 +144,7 @@ if [[ $TODO == "LISTALL" ]]; then
     TABLES=(`echo "SHOW TABLES;" | \
         $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
 
-    echo "Database '${DBN}' contains ${#TABLES[@]} tables."
+    echo $"Database '%s' contains %s tables." ${DBN} ${#TABLES[@]}
 
     [ ${#TABLES[@]} -gt 0 ] && (IFS=$'\n'; echo "${TABLES[*]}")
 
@@ -142,9 +165,9 @@ elif [[ $TODO == "BACKUP" ]]; then
     $CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
 
     if [[ -s "$OUTPUT_FILE" ]]; then
-        echo "[OK] Your database has been successfully backed up to $OUTPUT_FILE ."
+        echo $"[OK] Your database has been successfully backed up to %s ." $OUTPUT_FILE
     else
-        echo "[Error] $OUTPUT_FILE is empty."
+        echo $"[Error] %s is empty." $OUTPUT_FILE
     fi
 
 elif [[ $TODO == "DROP" ]]; then
@@ -153,36 +176,36 @@ elif [[ $TODO == "DROP" ]]; then
         $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
 
     if [[ ${#TABLES[@]} -eq 0 ]]; then
-        echo "No tables in the database. Nothing to drop."
+        echo $"No tables in the database. Nothing to drop."
         exit 0
     fi
 
-    WARN "WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
-    WARN "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
-    WARN "${DBN} CONTAINS ${#TABLES[@]} TABLES INCLUDING ${TABLES[0]}."
+    WARN $"WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
+    WARN $"THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
+    WARN $"%s CONTAINS %s TABLES INCLUDING %s." ${DBN} ${#TABLES[@]} ${TABLES[0]}
     echo
     while [[ $CONFIRM != $DBN ]]; do
         printf "\e[1A"
-        echo "Type \"${DBN}\" and press Enter to continue; Ctrl-C to cancel."
+        echo $"Type \"%s\" and press Enter to continue; Ctrl-C to cancel." ${DBN}
         read CONFIRM
     done
     for (( i = $COUNTDOWN; i >= 0; i-- )); do
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
         fi
-        echo "Start dropping tables in ${i} seconds... Ctrl-C to cancel."
+        echo $"Start dropping tables in %s seconds... Ctrl-C to cancel." ${i}
         sleep 1
     done
 
     for (( i = 0; i < ${#TABLES[@]}; i++ )); do
         j=$(( $i + 1 ))
-        echo -n "Dropping table ${TABLES[$i]} [$j/${#TABLES[@]}] ... "
+        echo -n $"Dropping table %s %s ... " ${TABLES[$i]} "[$j/${#TABLES[@]}]"
         echo "DROP TABLE \`${TABLES[$i]}\`;" | \
             $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null
         if [[ $? -eq 0 ]]; then
-            echo "Done"
+            echo $"Done"
         else
-            echo "Fail"
+            echo $"Fail"
             exit 1
         fi
     done
@@ -191,7 +214,7 @@ elif [[ $TODO == "IMPORT" ]]; then
 
     PMA_INDEX=${PMA%%\?*}
 
-    echo -n "Logging into phpMyAdmin... "
+    echo -n $"Logging into phpMyAdmin... "
 
     IFS=$'\r'
 
@@ -202,10 +225,10 @@ elif [[ $TODO == "IMPORT" ]]; then
     -d "pma_username=${DBU}" \
     -d "pma_password=${DBP}"`
 
-    echo "Done"
+    echo $"Done"
 
     if [[ ! $PMA_RESULT =~ token=[a-f0-9]{32} ]]; then
-        echo "[Error] ${PMA_INDEX} : Login failed!"
+        echo $"[Error] %s : Login failed!" ${PMA_INDEX}
         exit 1
     fi
 
@@ -214,7 +237,7 @@ elif [[ $TODO == "IMPORT" ]]; then
 
     PMA_DIR=${PMA_INDEX%/*}
 
-    echo -n "Sending SQL queries... "
+    echo -n $"Sending SQL queries... "
 
     PMA_IMPORT=`$CURL -s ${VERBOSE} -L "${PMA_DIR}/import.php" -X "POST" \
     -b "${PWD}/cookie" \
@@ -222,10 +245,10 @@ elif [[ $TODO == "IMPORT" ]]; then
     -d "token=${TOKEN}" \
     --data-urlencode "sql_query@${SQL_INPUT}"`
 
-    echo "Done"
+    echo $"Done"
 
     if [[ $PMA_IMPORT != *\"notice\"* ]]; then
-        echo "[Exception] Response content does not contain any notices."
+        echo $"[Exception] Response content does not contain any notices."
         exit
     fi
 
@@ -234,7 +257,7 @@ elif [[ $TODO == "IMPORT" ]]; then
     NOTICE=${PMA_IMPORT:$(( ${#NOTICE} + ${#DELI} ))}
     NOTICE=${NOTICE%%</div>*}
 
-    echo "phpMyAdmin says: ${NOTICE}."
+    echo $"phpMyAdmin says: %s." ${NOTICE}
 
 fi
 
