@@ -3,11 +3,11 @@
 # https://github.com/caiguanhao/net.cn-utils
 # Copyright (c) 2013, Cai Guanhao (Choi Goon-ho) All rights reserved.
 
-CURL=$(which curl)
+CURL="$(which curl)"
 PWD="`pwd`"
 INFO_SH="info.sh"
 REMOTE_DIR="/htdocs"
-ZIP=$(which zip)
+ZIP="$(which zip)"
 EXTRACT=0
 COLS=`tput cols`
 BOLD=`tput bold`
@@ -15,11 +15,11 @@ NORMAL=`tput sgr0`
 INTERACTIVE=1
 OVERWRITE=1
 KEEPARCHIVE=0
-GETTEXT=$(which gettext)
+GETTEXT="$(which gettext)"
 OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
-export TEXTDOMAIN=$0
+export TEXTDOMAIN="$0"
 
 echo()
 {
@@ -170,9 +170,9 @@ IFS=$'\n'
 INFO=($($BASH "$PWD/$INFO_SH" -ftp))
 
 if [[ $? -ne 0 ]]; then
-    TEXTDOMAIN=$INFO_SH
+    TEXTDOMAIN="$INFO_SH"
     ERROR="`echo "${INFO[*]}"`"
-    TEXTDOMAIN=$0
+    TEXTDOMAIN="$0"
     echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${ERROR}"
     exit 1
 fi

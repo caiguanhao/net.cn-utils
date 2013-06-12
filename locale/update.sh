@@ -8,9 +8,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MAIN="$( dirname "$DIR" )"
 
-MSGUNIQ=$(which msguniq)
-MSGMERGE=$(which msgmerge)
-MSGFMT=$(which msgfmt)
+MSGUNIQ="$(which msguniq)"
+MSGMERGE="$(which msgmerge)"
+MSGFMT="$(which msgfmt)"
 
 if [[ $(( ${#MSGUNIQ} * ${#MSGUNIQ} * ${#MSGUNIQ} )) -eq 0 ]]; then
     echo "Need msguniq, msgmerge and msgfmt from GNU gettext."
@@ -18,13 +18,11 @@ if [[ $(( ${#MSGUNIQ} * ${#MSGUNIQ} * ${#MSGUNIQ} )) -eq 0 ]]; then
     exit 1
 fi
 
-LOCALES=(
-    $(find "${DIR}"/* -maxdepth 0 -type d)
-)
+IFS=$'\n'
 
-SHELL_FILES=(
-    $(find "${MAIN}" -maxdepth 1 -type f -name "*.sh")
-)
+LOCALES=($(find "${DIR}"/* -maxdepth 0 -type d))
+
+SHELL_FILES=($(find "${MAIN}" -maxdepth 1 -type f -name "*.sh"))
 
 if [[ $# -gt 0 ]]; then
     C_LC=()
@@ -71,8 +69,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 ' | cat - "${FILE}.po" > "${FILE}.po~" && mv "${FILE}.po~" "${FILE}.po"
-            $MSGFMT -o "${FILE}.mo" "${FILE}.po" >/dev/null 2>&1
-            CHECK
             echo "Done"
         else
             cd "$SF_D" && $BASH --dump-po-strings "${SF_F}" > "${FILE}.po2"

@@ -8,10 +8,10 @@ COOKIE="${PWD}/cookie"
 OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
-export TEXTDOMAIN=$0
+export TEXTDOMAIN="$0"
 
-CURL=$(which curl)
-GETTEXT=$(which gettext)
+CURL="$(which curl)"
+GETTEXT="$(which gettext)"
 
 echo()
 {

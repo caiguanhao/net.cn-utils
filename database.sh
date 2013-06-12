@@ -13,10 +13,10 @@ NORMAL=`tput sgr0`
 OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
-export TEXTDOMAIN=$0
+export TEXTDOMAIN="$0"
 
-CURL=$(which curl)
-GETTEXT=$(which gettext)
+CURL="$(which curl)"
+GETTEXT="$(which gettext)"
 
 echo()
 {
@@ -43,7 +43,7 @@ if [[ ${#CURL} -eq 0 ]]; then
     exit 1
 fi
 
-MYSQL=$(which mysql)
+MYSQL="$(which mysql)"
 
 if [[ ${#MYSQL} -eq 0 ]]; then
     echo $"[Error] Install mysql (client) first."
@@ -60,7 +60,7 @@ NEW_TODO()
     if [[ ${#TODO} -gt 0 ]]; then
         echo $"One database action at a time." && exit 1
     fi
-    TODO=$1
+    TODO="$1"
 }
 
 GET_WIDTH_OF()
@@ -158,13 +158,13 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-WEB=${INFO[0]}
-FTP=${INFO[1]}
-DBN=${INFO[2]}
-DBH=${INFO[3]}
-DBU=${INFO[4]}
-DBP=${INFO[5]}
-PMA=${INFO[6]}
+WEB="${INFO[0]}"
+FTP="${INFO[1]}"
+DBN="${INFO[2]}"
+DBH="${INFO[3]}"
+DBU="${INFO[4]}"
+DBP="${INFO[5]}"
+PMA="${INFO[6]}"
 
 if [[ $TODO == "LISTALL" ]]; then
 

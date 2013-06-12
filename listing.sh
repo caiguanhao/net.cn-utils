@@ -16,10 +16,10 @@ PATHTOLIST="/"
 OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
-export TEXTDOMAIN=$0
+export TEXTDOMAIN="$0"
 
-CURL=$(which curl)
-GETTEXT=$(which gettext)
+CURL="$(which curl)"
+GETTEXT="$(which gettext)"
 
 echo()
 {
@@ -51,7 +51,7 @@ NEW_TODO()
     if [[ ${#TODO} -gt 0 ]]; then
         echo $"One action at a time." && exit 1
     fi
-    TODO=$1
+    TODO="$1"
 }
 
 GET_WIDTH_OF()
