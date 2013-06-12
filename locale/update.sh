@@ -7,6 +7,12 @@ MSGUNIQ=$(which msguniq)
 MSGMERGE=$(which msgmerge)
 MSGFMT=$(which msgfmt)
 
+if [[ $(( ${#MSGUNIQ} * ${#MSGUNIQ} * ${#MSGUNIQ} )) -eq 0 ]]; then
+    echo "Need msguniq, msgmerge and msgfmt from GNU gettext."
+    echo "Please install gettext first."
+    exit 1
+fi
+
 LOCALES=(
     $(find "${DIR}"/* -maxdepth 0 -type d)
 )
