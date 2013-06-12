@@ -165,6 +165,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+IFS=$'\n'
+
 INFO=($($BASH "$PWD/$INFO_SH" -ftp))
 
 if [[ $? -ne 0 ]]; then

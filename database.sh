@@ -146,6 +146,8 @@ if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
     exit 0
 fi
 
+IFS=$'\n'
+
 INFO=($($BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma))
 
 if [[ $? -ne 0 ]]; then

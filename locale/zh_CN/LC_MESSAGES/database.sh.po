@@ -51,75 +51,75 @@ msgstr "  -i, --import <文件>          将此SQL文件导入到数据库"
 msgid "  -v, --verbose                Show more status if possible"
 msgstr "  -v, --verbose                尽量显示更多信息"
 
-#: database.sh:152
+#: database.sh:157
 msgid "[Error] %s : %s"
 msgstr "[错误] %s : %s"
 
-#: database.sh:169
+#: database.sh:174
 msgid "Database '%s' contains %s tables."
 msgstr "数据库 %s 含有 %s 个表。"
 
-#: database.sh:190
+#: database.sh:195
 msgid "[OK] Your database has been successfully backed up to %s ."
 msgstr "[正常] 你的数据库已成功备份到 %s 。"
 
-#: database.sh:192
+#: database.sh:197
 msgid "[Error] %s is empty."
 msgstr "[错误] %s 是个空文件。"
 
-#: database.sh:201
+#: database.sh:206
 msgid "No tables in the database. Nothing to drop."
 msgstr "数据库中没有表，所以没有表可删除。"
 
-#: database.sh:205
+#: database.sh:210
 msgid "WARNING: ALL DATA IN DATABASE WILL BE REMOVED!"
 msgstr "警告：数据库中所有资料将被删除！"
 
-#: database.sh:206
+#: database.sh:211
 msgid ""
 "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT DATA BACKED UP."
 msgstr "这是个不可逆转的操作。请确保你已备份了当中重要的资料。"
 
-#: database.sh:207
+#: database.sh:212
 msgid "%s CONTAINS %s TABLES INCLUDING %s."
 msgstr "%s 包含 %s 个表，包括 %s 。"
 
-#: database.sh:211
+#: database.sh:216
 msgid "Type %s and press Enter to continue; Ctrl-C to cancel."
 msgstr "输入 %s 并按 Enter 继续；按 Ctrl-C 取消。"
 
-#: database.sh:218
+#: database.sh:223
 msgid "Start dropping tables in %s seconds... Ctrl-C to cancel."
 msgstr "%s秒后开始删除表... 按 Ctrl-C 取消。"
 
-#: database.sh:224
+#: database.sh:229
 msgid "Dropping table %s %s ... "
 msgstr "正在删除表 %s %s ... "
 
-#: database.sh:228 database.sh:250 database.sh:270
+#: database.sh:233 database.sh:255 database.sh:275
 msgid "Done"
 msgstr "完成"
 
-#: database.sh:230
+#: database.sh:235
 msgid "Fail"
 msgstr "失败"
 
-#: database.sh:239
+#: database.sh:244
 msgid "Logging into phpMyAdmin... "
 msgstr "正在登录 phpMyAdmin ... "
 
-#: database.sh:253
+#: database.sh:258
 msgid "[Error] %s : Login failed!"
 msgstr "[错误] %s : 登录失败！"
 
-#: database.sh:262
+#: database.sh:267
 msgid "Sending SQL queries... "
 msgstr "正在发送 SQL 查询... "
 
-#: database.sh:273
+#: database.sh:278
 msgid "[Exception] Response content does not contain any notices."
 msgstr "[例外] 返回的内容中没有包含任何提示。"
 
-#: database.sh:282
+#: database.sh:287
 msgid "phpMyAdmin says: %s."
 msgstr "phpMyAdmin 返回了：%s 。"

@@ -201,7 +201,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     extract_value_of Statusname from INFO to STATUS
 
     if [[ $STATUS == "运行" ]]; then
-        STATUS="Running"
+        STATUS=$"Running"
+        STATUS="`echo "${STATUS}"`"
     fi
 
     IFS=$'\r'
@@ -268,8 +269,11 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
 
     SPACEUSED=${INFO##*&nbsp;}
     SPACEUSED=${SPACEUSED/使用}
-    SPACEUSED=${SPACEUSED/\/总/ used, }
-    SPACEUSED="${SPACEUSED} total"
+    SPACEUSED=${SPACEUSED/总}
+    SP_U=${SPACEUSED%%/*}
+    SP_T=${SPACEUSED##*/}
+    SPACEUSED=$"%s used, %s total"
+    SPACEUSED="`echo "${SPACEUSED}" "$SP_U" "$SP_T"`"
 
     if [[ $PART3 -eq 0 ]]; then
         echo $"  Space Usage:              %s" "${SPACEUSED}"

@@ -79,58 +79,58 @@ msgstr "[错误] 如果你准备直接解压即将上传的 zip 文件，"
 msgid "[Error] the zip file that will be uploaded."
 msgstr "[错误] 请删除这个选项。"
 
-#: upload.sh:171
+#: upload.sh:176
 msgid "[Error] %s : %s"
 msgstr "[错误] %s : %s"
 
-#: upload.sh:180
+#: upload.sh:185
 msgid "CREATING ARCHIVE"
 msgstr "创建压缩文件"
 
-#: upload.sh:206
+#: upload.sh:211
 msgid "UPLOADING FILE"
 msgstr "上传文件"
 
-#: upload.sh:227
+#: upload.sh:232
 msgid "[Error] Fail to extract file: no input file."
 msgstr "[错误] 解压文件时失败：没有指定解压文件。"
 
-#: upload.sh:246
+#: upload.sh:251
 msgid "[Exception] Exit with status code %s (should be 200)."
 msgstr "[例外] 返回的FTP状态码是 %s ，而非期待的 200，所以退出。"
 
-#: upload.sh:248
+#: upload.sh:253
 msgid "[Exception] You may need to log in again."
 msgstr "[例外] 你可能需要再次登录。"
 
-#: upload.sh:253
+#: upload.sh:258
 msgid "EXTRACTING ARCHIVE"
 msgstr "解压文件"
 
-#: upload.sh:273
+#: upload.sh:278
 msgid "[OK] File has been successfully extracted."
 msgstr "[正常] 压缩文件成功解压。"
 
-#: upload.sh:275
+#: upload.sh:280
 msgid "[Error] Fail to extract file. Message: %s"
 msgstr "[错误] 解压文件失败，服务器返回了信息："
 
-#: upload.sh:280
+#: upload.sh:285
 msgid "DELETING ARCHIVE"
 msgstr "删除压缩文件"
 
-#: upload.sh:287
+#: upload.sh:292
 msgid "Deleting %s ... "
 msgstr "正在删除 %s ... "
 
-#: upload.sh:290
+#: upload.sh:295
 msgid "Done"
 msgstr "完成"
 
-#: upload.sh:293
+#: upload.sh:298
 msgid "[OK] File has been deleted."
 msgstr "[正常] 文件已被删除。"
 
-#: upload.sh:295
+#: upload.sh:300
 msgid "[Exception] Exit with FTP return code %s (should be 250)."
 msgstr "[例外] 返回的FTP状态码是 %s ，而非期待的 250，所以退出。"

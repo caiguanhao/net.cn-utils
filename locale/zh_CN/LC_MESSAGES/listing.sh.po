@@ -31,47 +31,47 @@ msgstr "  -l, --list <路径>            列出此位置下的文件"
 msgid "  -rm-rf, --remove-all         Delete everything on server"
 msgstr "  -rm-rf, --remove-all         删除空间上所有文件"
 
-#: listing.sh:122
+#: listing.sh:125
 msgid "[Error] %s : %s"
 msgstr "[错误] %s : %s"
 
-#: listing.sh:144
+#: listing.sh:147
 msgid "%s returned %s items with status code %s."
 msgstr "%s 返回了 %s 个项目，返回的状态码是 %s 。"
 
-#: listing.sh:148
+#: listing.sh:151
 msgid "%s returned status code %s."
 msgstr "%s 返回了状态码 %s 。"
 
-#: listing.sh:154
+#: listing.sh:157
 msgid "WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
 msgstr "警告：所有文件和目录都会被删除！"
 
-#: listing.sh:155
+#: listing.sh:158
 msgid ""
 "THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
 msgstr "这是个不可逆转的操作。请确保你已备份了当中重要的文件。"
 
-#: listing.sh:156
+#: listing.sh:159
 msgid "CURRENT SPACE USAGE OF %s: %s."
 msgstr "当前 %s 的空间使用状况：%s 。"
 
-#: listing.sh:160
+#: listing.sh:163
 msgid "Type %s and press Enter to continue; Ctrl-C to cancel."
 msgstr "输入 %s 并按 Enter 继续；按 Ctrl-C 取消。"
 
-#: listing.sh:167
+#: listing.sh:170
 msgid "Start removing all files on server in %s seconds... Ctrl-C to cancel."
 msgstr "%s秒后开始删除所有文件... 按 Ctrl-C 取消。"
 
-#: listing.sh:170
+#: listing.sh:173
 msgid "Uploading self-deleting script... "
 msgstr "正在上传自我删除脚本... "
 
-#: listing.sh:173 listing.sh:176
+#: listing.sh:176 listing.sh:179
 msgid "Done"
 msgstr "完成"
 
-#: listing.sh:174
+#: listing.sh:177
 msgid "Deleting all files... "
 msgstr "正在删除所有文件... "
