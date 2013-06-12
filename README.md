@@ -2,6 +2,9 @@ NET.CN Utils
 ============
 **Make your NET.CN virtual hosting suck less and SAVE lots of time.**
 
+**这是一个方便管理万网虚拟空间的 *超级* BASH工具**  
+查看[如何](#i18n)将语言切换为中文
+
 login.sh
 --------
     Usage: login.sh [OPTIONS...]
@@ -142,9 +145,23 @@ Examples
       Uploading self-deleting script... Done
       Deleting all files... Done
 
+I18n
+----
+
+### 简体中文 (zh_CN)
+
+如果你已选择简体中文（zh_CN.UTF-8）作为你的系统语言，则无需任何设置。如果你不清楚你的设置，可在终端执行 ``locale`` 查看 ``LC_ALL`` 对应的值。如果你不是选择这个语言，请先执行 ``locale -a`` 查看是否已安装 zh_CN.UTF-8 ，如果是，你可以通过以下命令暂时改为 zh_CN ：
+
+    export LC_ALL=zh_CN.UTF-8
+
+### Translation
+
+If you want to translate this script into other language, create a directory with the locale of the language (for example zh_HK is the locale of Traditional Chinese in Hong Kong), then run ``bash locale/update.sh`` to generate template .po files in the directory. After you finish the translations in all .po files, re-run the ``bash locale/update.sh`` command and it will update the .mo files for you.
+
 Requirements
 ------------
 * Linux or Mac OS X
+* [GNU gettext](http://www.gnu.org/software/gettext/) if you want to use other languages besides English
 
 |           |curl|mysql|zip|
 |-----------|:--:|:---:|:-:|
