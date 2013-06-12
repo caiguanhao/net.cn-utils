@@ -1,4 +1,7 @@
 #!/bin/bash
+# NET.CN Utils
+# https://github.com/caiguanhao/net.cn-utils
+# Copyright (c) 2013, Cai Guanhao (Choi Goon-ho) All rights reserved.
 
 CURL=$(which curl)
 PWD="`pwd`"
