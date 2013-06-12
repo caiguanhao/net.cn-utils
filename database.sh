@@ -146,10 +146,13 @@ if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
     exit 0
 fi
 
-INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma`)
+INFO=($($BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma))
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${INFO[@]}"
+    TEXTDOMAIN=$INFO_SH
+    ERROR="`echo "${INFO[*]}"`"
+    TEXTDOMAIN=$0
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${ERROR}"
     exit 1
 fi
 

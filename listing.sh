@@ -114,12 +114,13 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-IFS=$'\n'
-
-INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -id -sp`)
+INFO=($($BASH "$PWD/$INFO_SH" -web -ftp -id -sp))
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${INFO[@]}"
+    TEXTDOMAIN=$INFO_SH
+    ERROR="`echo "${INFO[*]}"`"
+    TEXTDOMAIN=$0
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${ERROR}"
     exit 1
 fi
 

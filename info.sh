@@ -44,7 +44,7 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 QUERY_URL="http://cp.hichina.com/AJAXPage.aspx"
 
 NEED_LOGIN_AGIAN=$"Timeout. You need to log in again."
-NEED_LOGIN_AGIAN=`echo "${NEED_LOGIN_AGIAN}"`
+NEED_LOGIN_AGIAN="`echo "${NEED_LOGIN_AGIAN}"`\n"
 
 ARGUMENTS_COUNT=$#
 
@@ -167,7 +167,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ $INFO != \{*\} ]]; then
-        echo $NEED_LOGIN_AGIAN
+        printf "$NEED_LOGIN_AGIAN"
         exit 1
     fi
 
@@ -238,7 +238,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#FTPLINK} -eq 0 ]] || [[ $FTPLINK == -1* ]]; then
-        echo $NEED_LOGIN_AGIAN
+        printf "$NEED_LOGIN_AGIAN"
         exit 1
     fi
 
@@ -262,7 +262,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
-        echo $NEED_LOGIN_AGIAN
+        printf "$NEED_LOGIN_AGIAN"
         exit 1
     fi
 
@@ -286,7 +286,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
-        echo $NEED_LOGIN_AGIAN
+        printf "$NEED_LOGIN_AGIAN"
         exit 1
     fi
 
@@ -309,7 +309,7 @@ then
     -A "${USER_AGENT}" | iconv -f gbk`
 
     if [[ ${#INFO} -eq 0 ]] || [[ $INFO == -1* ]]; then
-        echo $NEED_LOGIN_AGIAN
+        printf "$NEED_LOGIN_AGIAN"
         exit 1
     fi
 
@@ -338,7 +338,7 @@ then
     if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
 
         if [[ ${#DBLINK} -eq 0 ]]; then
-            echo $NEED_LOGIN_AGIAN
+            printf "$NEED_LOGIN_AGIAN"
             exit 1
         fi
 
