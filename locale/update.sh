@@ -3,6 +3,8 @@
 # https://github.com/caiguanhao/net.cn-utils
 # Copyright (c) 2013, Cai Guanhao (Choi Goon-ho) All rights reserved.
 
+# Usage: bash update.sh [locale] ...
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 MAIN="$( dirname "$DIR" )"
 
@@ -24,6 +26,23 @@ SHELL_FILES=(
     $(find "${MAIN}" -maxdepth 1 -type f -name "*.sh")
 )
 
+if [[ $# -gt 0 ]]; then
+    C_LC=()
+    for ARG in "$@"; do
+        for LC in "${LOCALES[@]}"; do
+            LC_F=${LC##*/}
+            if [[ $ARG == $LC_F ]]; then
+                C_LC=("${C_LC[@]}" "$LC_F")
+            fi
+        done
+    done
+    if [[ ${#C_LC[@]} -ne $# ]]; then
+        echo "At least one locale does not exist."
+        exit 1
+    fi
+    LOCALES=("${C_LC[@]}")
+fi
+
 CHECK()
 {
     if [[ $? -ne 0 ]]; then
@@ -32,11 +51,11 @@ CHECK()
     fi
 }
 
-for SF in "${SHELL_FILES[@]}"; do
+for LC in "${LOCALES[@]}"; do
+    LC_F=${LC##*/}
+    for SF in "${SHELL_FILES[@]}"; do
     SF_D=${SF%/*}
     SF_F=${SF##*/}
-    for LC in "${LOCALES[@]}"; do
-        LC_F=${LC##*/}
         echo -n "Processing $SF_F for $LC_F ... "
         LC_M="${DIR}/${LC_F}/LC_MESSAGES"
         FILE="${LC_M}/${SF_F}"
