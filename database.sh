@@ -7,6 +7,7 @@ COUNTDOWN=5
 COLS=`tput cols`
 BOLD=`tput bold`
 NORMAL=`tput sgr0`
+OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
 export TEXTDOMAIN=$0
@@ -16,19 +17,20 @@ GETTEXT=$(which gettext)
 
 echo()
 {
+    IFS=$OLDIFS
     if [[ ${#@} -eq 0 ]]; then
         printf "\n"
     elif [[ ${#GETTEXT} -eq 0 ]]; then
         if [[ $1 == "-n" ]]; then
-            printf "$2" ${@:3}
+            printf "$2" "${@:3}"
         else
-            printf "$1\n" ${@:2}
+            printf "$1\n" "${@:2}"
         fi
     else
         if [[ $1 == "-n" ]]; then
-            printf "`${GETTEXT} -s "$2"`" ${@:3}
+            printf "`${GETTEXT} -s "$2"`" "${@:3}"
         else
-            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+            printf "`${GETTEXT} -s "$1"`\n" "${@:2}"
         fi
     fi
 }
@@ -105,7 +107,7 @@ while [[ $# -gt 0 ]]; do
             if [[ $# -gt 0 ]]; then
                 SQL_INPUT="$1"
                 if [[ ! -f $SQL_INPUT ]]; then
-                    echo $"[Error] %s : File does not exist." $SQL_INPUT
+                    echo $"[Error] %s : File does not exist." "$SQL_INPUT"
                     exit 1
                 fi
                 shift
@@ -130,7 +132,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ ${#TODO} -eq 0 ]] || [[ $SHOWHELP -eq 1 ]]; then
-    echo $"Usage: %s [OPTIONS...]" $0
+    echo $"Usage: %s [OPTIONS...]" "$0"
     echo $"Options:"
     echo $"  -h, --help                   Show this help and exit"
     echo $"  -al, -la, --list-all         List all tables in database"
@@ -144,7 +146,7 @@ fi
 INFO=(`$BASH "$PWD/$INFO_SH" -web -ftp -dbn -dbh -dbu -dbp -pma`)
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] %s : %s" "$PWD/$INFO_SH" ${INFO[@]}
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${INFO[@]}"
     exit 1
 fi
 
@@ -161,7 +163,7 @@ if [[ $TODO == "LISTALL" ]]; then
     TABLES=(`echo "SHOW TABLES;" | \
         $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null`)
 
-    echo $"Database '%s' contains %s tables." ${DBN} ${#TABLES[@]}
+    echo $"Database '%s' contains %s tables." "${DBN}" "${#TABLES[@]}"
 
     [ ${#TABLES[@]} -gt 0 ] && (IFS=$'\n'; echo "${TABLES[*]}")
 
@@ -182,9 +184,9 @@ elif [[ $TODO == "BACKUP" ]]; then
     $CURL -s ${VERBOSE} -L "$WEB/$FILE" -o "$OUTPUT_FILE"
 
     if [[ -s "$OUTPUT_FILE" ]]; then
-        echo $"[OK] Your database has been successfully backed up to %s ." $OUTPUT_FILE
+        echo $"[OK] Your database has been successfully backed up to %s ." "$OUTPUT_FILE"
     else
-        echo $"[Error] %s is empty." $OUTPUT_FILE
+        echo $"[Error] %s is empty." "$OUTPUT_FILE"
     fi
 
 elif [[ $TODO == "DROP" ]]; then
@@ -210,13 +212,13 @@ elif [[ $TODO == "DROP" ]]; then
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
         fi
-        echo $"Start dropping tables in %s seconds... Ctrl-C to cancel." ${i}
+        echo $"Start dropping tables in %s seconds... Ctrl-C to cancel." "${i}"
         sleep 1
     done
 
     for (( i = 0; i < ${#TABLES[@]}; i++ )); do
         j=$(( $i + 1 ))
-        echo -n $"Dropping table %s %s ... " ${TABLES[$i]} "[$j/${#TABLES[@]}]"
+        echo -n $"Dropping table %s %s ... " "${TABLES[$i]}" "[$j/${#TABLES[@]}]"
         echo "DROP TABLE \`${TABLES[$i]}\`;" | \
             $MYSQL -s -h "${DBH}" -u "${DBU}" -p"${DBP}" "${DBN}" 2>/dev/null
         if [[ $? -eq 0 ]]; then
@@ -245,7 +247,7 @@ elif [[ $TODO == "IMPORT" ]]; then
     echo $"Done"
 
     if [[ ! $PMA_RESULT =~ token=[a-f0-9]{32} ]]; then
-        echo $"[Error] %s : Login failed!" ${PMA_INDEX}
+        echo $"[Error] %s : Login failed!" "${PMA_INDEX}"
         exit 1
     fi
 
@@ -274,7 +276,7 @@ elif [[ $TODO == "IMPORT" ]]; then
     NOTICE=${PMA_IMPORT:$(( ${#NOTICE} + ${#DELI} ))}
     NOTICE=${NOTICE%%</div>*}
 
-    echo $"phpMyAdmin says: %s." ${NOTICE}
+    echo $"phpMyAdmin says: %s." "${NOTICE}"
 
 fi
 

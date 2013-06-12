@@ -13,25 +13,27 @@ INTERACTIVE=1
 OVERWRITE=1
 KEEPARCHIVE=0
 GETTEXT=$(which gettext)
+OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
 export TEXTDOMAIN=$0
 
 echo()
 {
+    IFS=$OLDIFS
     if [[ ${#@} -eq 0 ]]; then
         printf "\n"
     elif [[ ${#GETTEXT} -eq 0 ]]; then
         if [[ $1 == "-n" ]]; then
-            printf "$2" ${@:3}
+            printf "$2" "${@:3}"
         else
-            printf "$1\n" ${@:2}
+            printf "$1\n" "${@:2}"
         fi
     else
         if [[ $1 == "-n" ]]; then
-            printf "`${GETTEXT} -s "$2"`" ${@:3}
+            printf "`${GETTEXT} -s "$2"`" "${@:3}"
         else
-            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+            printf "`${GETTEXT} -s "$1"`\n" "${@:2}"
         fi
     fi
 }
@@ -53,12 +55,12 @@ AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31"
 
 HELP()
 {
-    echo $"Usage: %s [OPTIONS...]" $0
+    echo $"Usage: %s [OPTIONS...]" "$0"
     echo $"Options:"
     echo $"  -h, --help                   Show this help and exit"
     echo $"  -f, -from <file>             File to upload, directory will be"
     echo $"                               compressed as zip file"
-    echo $"  -t, --to <path>              Remote path relative to %s" ${REMOTE_DIR}
+    echo $"  -t, --to <path>              Remote path relative to %s" "${REMOTE_DIR}"
     echo $"  -e, --extract <file.zip>     Remote zip file to extract"
     echo $"  -d, --destination <path>     Extract files to path"
     echo $"  -s, --no-overwrite           Do not overwrite existing files"
@@ -104,7 +106,7 @@ while [[ $# -gt 0 ]]; do
             if [[ $# -gt 0 ]]; then
                 FROM="$1"
                 if [[ ! -e $FROM ]]; then
-                    echo $"[Error] %s : No such file or directory." $FROM
+                    echo $"[Error] %s : No such file or directory." "$FROM"
                     exit 1
                 fi
                 shift
@@ -163,7 +165,7 @@ done
 INFO=(`$BASH "$PWD/$INFO_SH" -ftp`)
 
 if [[ $? -ne 0 ]]; then
-    echo $"[Error] %s : %s" "$PWD/$INFO_SH" ${INFO[@]}
+    echo $"[Error] %s : %s" "$PWD/$INFO_SH" "${INFO[@]}"
     exit 1
 fi
 
@@ -238,7 +240,7 @@ if [[ $EXTRACT -eq 1 ]]; then
     -w "%{http_code}"`
 
     if [[ $OUTPUT -ne 200 ]]; then
-        echo $"[Exception] Exit with status code %s (should be 200)." ${OUTPUT}
+        echo $"[Exception] Exit with status code %s (should be 200)." "${OUTPUT}"
         if [[ $OUTPUT -eq 302 ]]; then
             echo $"[Exception] You may need to log in again."
         fi
@@ -267,7 +269,7 @@ if [[ $EXTRACT -eq 1 ]]; then
     if [[ $OUTPUT == *200\|OK* ]]; then
         echo $"[OK] File has been successfully extracted."
     else
-        echo $"[Error] Fail to extract file. Message: %s" $OUTPUT
+        echo $"[Error] Fail to extract file. Message: %s" "$OUTPUT"
         exit 1
     fi
 
@@ -287,7 +289,7 @@ if [[ $EXTRACT -eq 1 ]]; then
         if [[ $OUTPUT -eq 250 ]]; then
             echo $"[OK] File has been deleted."
         else
-            echo $"[Exception] Exit with FTP return code %s (should be 250)." $OUTPUT
+            echo $"[Exception] Exit with FTP return code %s (should be 250)." "$OUTPUT"
             exit 1
         fi
     fi

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-alias echo="echo" # turn shell built-in echo into $echo
-
 PWD="`pwd`"
 COOKIE="${PWD}/cookie"
+OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
 export TEXTDOMAIN=$0
@@ -13,19 +12,20 @@ GETTEXT=$(which gettext)
 
 echo()
 {
+    IFS=$OLDIFS
     if [[ ${#@} -eq 0 ]]; then
         printf "\n"
     elif [[ ${#GETTEXT} -eq 0 ]]; then
         if [[ $1 == "-n" ]]; then
-            printf "$2" ${@:3}
+            printf "$2" "${@:3}"
         else
-            printf "$1\n" ${@:2}
+            printf "$1\n" "${@:2}"
         fi
     else
         if [[ $1 == "-n" ]]; then
-            printf "`${GETTEXT} -s "$2"`" ${@:3}
+            printf "`${GETTEXT} -s "$2"`" "${@:3}"
         else
-            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+            printf "`${GETTEXT} -s "$1"`\n" "${@:2}"
         fi
     fi
 }
@@ -212,16 +212,16 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART1 -eq 1 ]]; then
     WEBLINKS="${INFO}"
 
     if [[ $PART1 -eq 0 ]]; then
-        echo $"Info for %s:" ${SITEID}
-        echo $"  Product Type:             %s" ${TYPENAME}
-        echo $"  Valid From:               %s" ${OPENDATE}
-        echo $"  Valid To:                 %s" ${ENDDATE}
-        echo $"  Status:                   %s" ${STATUS}
-        echo $"  IP Address:               %s" ${SITEIP}
-        echo $"  Operating System:         %s" ${OSNAME}
-        echo $"  Programming Languages:    %s" ${SCRIPTS}
-        echo $"  Web Link:                 %s" ${WEBLINK}
-        echo $"  Web Links:                %s" ${WEBLINKS}
+        echo $"Info for %s:" "${SITEID}"
+        echo $"  Product Type:             %s" "${TYPENAME}"
+        echo $"  Valid From:               %s" "${OPENDATE}"
+        echo $"  Valid To:                 %s" "${ENDDATE}"
+        echo $"  Status:                   %s" "${STATUS}"
+        echo $"  IP Address:               %s" "${SITEIP}"
+        echo $"  Operating System:         %s" "${OSNAME}"
+        echo $"  Programming Languages:    %s" "${SCRIPTS}"
+        echo $"  Web Link:                 %s" "${WEBLINK}"
+        echo $"  Web Links:                %s" "${WEBLINKS}"
     fi
 fi
 
@@ -244,8 +244,8 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART2 -eq 1 ]]; then
     FTPMIRROR=`echo "${FTPMIRROR}" | sed -e"s/  */ /g"`
 
     if [[ $PART2 -eq 0 ]]; then
-        echo $"  FTP Link:                 %s" ${FTPLINK}
-        echo $"  FTP Mirror Command:       %s" ${FTPMIRROR}
+        echo $"  FTP Link:                 %s" "${FTPLINK}"
+        echo $"  FTP Mirror Command:       %s" "${FTPMIRROR}"
     fi
 fi
 
@@ -269,7 +269,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART3 -eq 1 ]]; then
     SPACEUSED="${SPACEUSED} total"
 
     if [[ $PART3 -eq 0 ]]; then
-        echo $"  Space Usage:              %s" ${SPACEUSED}
+        echo $"  Space Usage:              %s" "${SPACEUSED}"
     fi
 fi
 
@@ -290,7 +290,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART4 -eq 1 ]]; then
     BWUSED=${INFO##*>}
 
     if [[ $PART4 -eq 0 ]]; then
-        echo $"  Bandwidth Usage:          %s" ${BWUSED}
+        echo $"  Bandwidth Usage:          %s" "${BWUSED}"
     fi
 fi
 
@@ -328,8 +328,8 @@ then
     DBLINK=${_INFO%%\'*}
 
     if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
-        echo $"  phpMyAdmin Link:          %s" ${DBLINK}
-        echo $"  Database Name:            %s" ${DBNAME}
+        echo $"  phpMyAdmin Link:          %s" "${DBLINK}"
+        echo $"  Database Name:            %s" "${DBNAME}"
     fi
 
     if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART6 -eq 1 ]]; then
@@ -390,11 +390,11 @@ then
         MYSQLDUMP=`echo "${MYSQLDUMP}" | sed -e"s/  */ /g"`
 
         if [[ $PART6 -eq 0 ]]; then
-            echo $"  Database Host:            %s" ${DBHOST}
-            echo $"  Database User Name:       %s" ${DBUSER}
-            echo $"  Database Password:        %s" ${DBPASS}
-            echo $"  MySQL Backup Command:     %s" ${MYSQLDUMP}
-            echo $"  MySQL Connect Command:    %s" ${MYSQLCONNECT}
+            echo $"  Database Host:            %s" "${DBHOST}"
+            echo $"  Database User Name:       %s" "${DBUSER}"
+            echo $"  Database Password:        %s" "${DBPASS}"
+            echo $"  MySQL Backup Command:     %s" "${MYSQLDUMP}"
+            echo $"  MySQL Connect Command:    %s" "${MYSQLCONNECT}"
         fi
     fi
 fi
@@ -408,7 +408,7 @@ if [[ $ARGUMENTS_COUNT -eq 0 ]] || [[ $PART7 -eq 1 ]]; then
     SETCOOKIE="document.cookie=\"${ASI}=${SETCOOKIE:1}\";"
 
     if [[ $PART7 -eq 0 ]]; then
-        echo $"  Set Cookie:               %s" ${SETCOOKIE}
+        echo $"  Set Cookie:               %s" "${SETCOOKIE}"
     fi
 fi
 
@@ -420,7 +420,7 @@ if [[ $ARGUMENTS_COUNT -gt 0 ]]; then
             echo "${!ARG}"
         done
     else
-        echo $"Usage: %s [OPTIONS/ITEMS...]" $0
+        echo $"Usage: %s [OPTIONS/ITEMS...]" "$0"
         echo $"Options:"
         echo $"  -h, --help                   Show this help and exit"
         echo $"Items:"

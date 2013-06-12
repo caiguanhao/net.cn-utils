@@ -3,58 +3,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: login.sh:31
+#: login.sh:33
 msgid "[Error] Install curl first."
 msgstr "[错误] 请先安装 curl 。"
 
-#: login.sh:52
+#: login.sh:54
 msgid "Usage: %s [OPTIONS...]"
 msgstr "使用方法：%s [选项...]"
 
-#: login.sh:53
+#: login.sh:55
 msgid "Options:"
 msgstr "选项："
 
-#: login.sh:54
+#: login.sh:56
 msgid "  -h, --help                   Show this help and exit"
 msgstr "  -h, --help                   显示此帮助信息并退出"
 
-#: login.sh:55
+#: login.sh:57
 msgid "  -u, --username <username>    Log in with this user name"
 msgstr "  -u, --username <用户名>      使用此用户名登录"
 
-#: login.sh:56
+#: login.sh:58
 msgid "  -p, --password <password>    Log in with this password"
 msgstr "  -p, --password <密码>        使用此密码登录"
 
-#: login.sh:63
+#: login.sh:65
 msgid "User name (hmu*): "
 msgstr "用户名（hmu*）："
 
-#: login.sh:68
+#: login.sh:70
 msgid "Password for %s: "
 msgstr "%s的密码："
 
-#: login.sh:94
+#: login.sh:96
 msgid "[Error] No verification code."
 msgstr "[错误] 找不到验证码。"
 
-#: login.sh:95
+#: login.sh:97
 msgid "[Error] Maybe your network is down?"
 msgstr "[错误] 是不是因为网络不通？"
 
-#: login.sh:142
+#: login.sh:144
 msgid "[Error] Exit with status code %s (should be 302)."
 msgstr "[错误] 返回的状态码是 %s ，而非期待的 302，所以退出。"
 
-#: login.sh:143
+#: login.sh:145
 msgid "[Error] Maybe your user name or password is wrong?"
 msgstr "[错误] 是不是用户名或密码错误？"
 
-#: login.sh:154
+#: login.sh:156
 msgid "[Error] It seems you are not logged in."
 msgstr "[错误] 貌似你还没有成功登录。"
 
-#: login.sh:158
+#: login.sh:160
 msgid "[OK] You are now logged in."
 msgstr "[正常] 你已成功登录。"

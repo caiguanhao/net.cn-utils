@@ -3,134 +3,134 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: upload.sh:40
+#: upload.sh:42
 msgid "[Error] Install curl first."
 msgstr "[错误] 请先安装 curl 。"
 
-#: upload.sh:45
+#: upload.sh:47
 msgid "[Error] Install zip first."
 msgstr "[错误] 请先安装 zip 。"
 
-#: upload.sh:56
+#: upload.sh:58
 msgid "Usage: %s [OPTIONS...]"
 msgstr "使用方法：%s [选项...]"
 
-#: upload.sh:57
+#: upload.sh:59
 msgid "Options:"
 msgstr "选项："
 
-#: upload.sh:58
+#: upload.sh:60
 msgid "  -h, --help                   Show this help and exit"
 msgstr "  -h, --help                   显示此帮助信息并退出"
 
-#: upload.sh:59
+#: upload.sh:61
 msgid "  -f, -from <file>             File to upload, directory will be"
 msgstr "  -f, -from <文件>             需要上传的文件，如果是目录，"
 
-#: upload.sh:60
+#: upload.sh:62
 msgid "                               compressed as zip file"
 msgstr "                               则先将压缩成 zip 文件"
 
-#: upload.sh:61
+#: upload.sh:63
 msgid "  -t, --to <path>              Remote path relative to %s"
 msgstr "  -t, --to <路径>              空间上相对于 %s 的路径"
 
-#: upload.sh:62
+#: upload.sh:64
 msgid "  -e, --extract <file.zip>     Remote zip file to extract"
 msgstr "  -e, --extract <文件.zip>     空间上需要解压的 zip 文件"
 
-#: upload.sh:63
+#: upload.sh:65
 msgid "  -d, --destination <path>     Extract files to path"
 msgstr "  -d, --destination <路径>     解压到指定路径"
 
-#: upload.sh:64
+#: upload.sh:66
 msgid "  -s, --no-overwrite           Do not overwrite existing files"
 msgstr "  -s, --no-overwrite           解压时不允许覆盖文件"
 
-#: upload.sh:65
+#: upload.sh:67
 msgid "  -k, --keep-archive           Do not delete the archive file"
 msgstr "  -k, --keep-archive           解压完成不提示删除压缩文件"
 
-#: upload.sh:66
+#: upload.sh:68
 msgid "  -y, --assumeyes, -n, --non-interactive"
 msgstr "  -y, --assumeyes, -n, --non-interactive"
 
-#: upload.sh:67
+#: upload.sh:69
 msgid "                               Execute commands without confirmations"
 msgstr "                               直接执行，不询问是否执行"
 
-#: upload.sh:107
+#: upload.sh:109
 msgid "[Error] %s : No such file or directory."
 msgstr "[错误] %s : 找不到文件或目录。"
 
-#: upload.sh:128
+#: upload.sh:130
 msgid "[Error] -e, --extract:"
 msgstr "[错误] -e, --extract:"
 
-#: upload.sh:129
+#: upload.sh:131
 msgid "[Error] You must specify the name of remote zip file."
 msgstr "[错误] 你必须要指定空间上的压缩文件的位置。"
 
-#: upload.sh:130
+#: upload.sh:132
 msgid "[Error] Remove this option if you want to extract"
 msgstr "[错误] 如果你准备直接解压即将上传的 zip 文件，"
 
-#: upload.sh:131
+#: upload.sh:133
 msgid "[Error] the zip file that will be uploaded."
 msgstr "[错误] 请删除这个选项。"
 
-#: upload.sh:166
+#: upload.sh:168
 msgid "[Error] %s : %s"
 msgstr "[错误] %s : %s"
 
-#: upload.sh:175
+#: upload.sh:177
 msgid "CREATING ARCHIVE"
 msgstr "创建压缩文件"
 
-#: upload.sh:201
+#: upload.sh:203
 msgid "UPLOADING FILE"
 msgstr "上传文件"
 
-#: upload.sh:222
+#: upload.sh:224
 msgid "[Error] Fail to extract file: no input file."
 msgstr "[错误] 解压文件时失败：没有指定解压文件。"
 
-#: upload.sh:241
+#: upload.sh:243
 msgid "[Exception] Exit with status code %s (should be 200)."
 msgstr "[例外] 返回的FTP状态码是 %s ，而非期待的 200，所以退出。"
 
-#: upload.sh:243
+#: upload.sh:245
 msgid "[Exception] You may need to log in again."
 msgstr "[例外] 你可能需要再次登录。"
 
-#: upload.sh:248
+#: upload.sh:250
 msgid "EXTRACTING ARCHIVE"
 msgstr "解压文件"
 
-#: upload.sh:268
+#: upload.sh:270
 msgid "[OK] File has been successfully extracted."
 msgstr "[正常] 压缩文件成功解压。"
 
-#: upload.sh:270
+#: upload.sh:272
 msgid "[Error] Fail to extract file. Message: %s"
 msgstr "[错误] 解压文件失败，服务器返回了信息："
 
-#: upload.sh:275
+#: upload.sh:277
 msgid "DELETING ARCHIVE"
 msgstr "删除压缩文件"
 
-#: upload.sh:282
+#: upload.sh:284
 msgid "Deleting %s ... "
 msgstr "正在删除 %s ... "
 
-#: upload.sh:285
+#: upload.sh:287
 msgid "Done"
 msgstr "完成"
 
-#: upload.sh:288
+#: upload.sh:290
 msgid "[OK] File has been deleted."
 msgstr "[正常] 文件已被删除。"
 
-#: upload.sh:290
+#: upload.sh:292
 msgid "[Exception] Exit with FTP return code %s (should be 250)."
 msgstr "[例外] 返回的FTP状态码是 %s ，而非期待的 250，所以退出。"

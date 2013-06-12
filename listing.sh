@@ -10,6 +10,7 @@ NORMAL=`tput sgr0`
 REMOTE_DIR="/htdocs"
 TODO=""
 PATHTOLIST="/"
+OLDIFS=$IFS
 
 export TEXTDOMAINDIR="${PWD}/locale"
 export TEXTDOMAIN=$0
@@ -19,20 +20,20 @@ GETTEXT=$(which gettext)
 
 echo()
 {
-    IFS=$' '
+    IFS=$OLDIFS
     if [[ ${#@} -eq 0 ]]; then
         printf "\n"
     elif [[ ${#GETTEXT} -eq 0 ]]; then
         if [[ $1 == "-n" ]]; then
-            printf "$2" ${@:3}
+            printf "$2" "${@:3}"
         else
-            printf "$1\n" ${@:2}
+            printf "$1\n" "${@:2}"
         fi
     else
         if [[ $1 == "-n" ]]; then
-            printf "`${GETTEXT} -s "$2"`" ${@:3}
+            printf "`${GETTEXT} -s "$2"`" "${@:3}"
         else
-            printf "`${GETTEXT} -s "$1"`\n" ${@:2}
+            printf "`${GETTEXT} -s "$1"`\n" "${@:2}"
         fi
     fi
 }
@@ -79,7 +80,7 @@ WARN()
 
 HELP()
 {
-    echo $"Usage: %s [OPTIONS...]" $0
+    echo $"Usage: %s [OPTIONS...]" "$0"
     echo $"Options:"
     echo $"  -h, --help                   Show this help and exit"
     echo $"  -l, --list <path>            List of contents in path"
@@ -149,7 +150,7 @@ if [[ $TODO == "RMRF" ]]; then
 
     WARN $"WARNING: ALL FILES AND DIRECTORIES WILL BE REMOVED!"
     WARN $"THIS ACTION IS IRREVERSIBLE. MAKE SURE YOU HAVE IMPORTANT FILES BACKED UP."
-    WARN $(echo $"CURRENT SPACE USAGE OF %s: %s." ${ID} ${SPACE} | tr '[a-z]' '[A-Z]')
+    WARN $(echo $"CURRENT SPACE USAGE OF %s: %s." "${ID}" "${SPACE}" | tr '[a-z]' '[A-Z]')
     echo
     while [[ $CONFIRM != $ID ]]; do
         printf "\e[1A"
@@ -160,7 +161,7 @@ if [[ $TODO == "RMRF" ]]; then
         if [[ $i -ne $COUNTDOWN ]]; then
             printf "\e[1A"
         fi
-        echo $"Start removing all files on server in %s seconds... Ctrl-C to cancel." ${i}
+        echo $"Start removing all files on server in %s seconds... Ctrl-C to cancel." "${i}"
         sleep 1
     done
     echo -n $"Uploading self-deleting script... "
