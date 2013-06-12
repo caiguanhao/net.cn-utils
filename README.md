@@ -150,9 +150,9 @@ I18n
 
 ### 简体中文 (zh_CN)
 
-如果你已选择简体中文（zh_CN.UTF-8）作为你的系统语言，则无需任何设置。如果你不清楚你的设置，可在终端执行 ``locale`` 查看 ``LC_ALL`` 对应的值。如果你不是选择这个语言，请先执行 ``locale -a`` 查看是否已安装 zh_CN.UTF-8 ，如果是，你可以通过以下命令暂时改为 zh_CN ：
+如果你已选择简体中文（zh_CN.UTF-8）作为你的系统语言，则无需任何设置。如果不是，请先执行 ``locale -a`` 查看是否已安装 zh_CN.UTF-8 ，如果已安装，你可以通过以下命令暂时改为 zh_CN ：
 
-    export LC_ALL=zh_CN.UTF-8
+    export LANGUAGE=zh_CN.UTF-8
 
 ### Translation
 
