@@ -156,7 +156,7 @@ I18n
 
 ### Translation
 
-If you want to translate this script into other language, create a directory with the locale of the language (for example zh_HK is the locale of Traditional Chinese in Hong Kong), then run ``bash locale/update.sh`` to generate template .po files in the directory. After you finish the translations in all .po files, re-run the ``bash locale/update.sh`` command and it will update the .mo files for you.
+If you want to translate this script into other language, create a directory with the name of the locale for the language (for example zh_HK is the locale of Traditional Chinese in Hong Kong), then run ``bash locale/update.sh`` to generate template .po files in the directory. After you finish the translations in all .po files, re-run the ``bash locale/update.sh`` command and it will update the .mo files for you.
 
 Requirements
 ------------
