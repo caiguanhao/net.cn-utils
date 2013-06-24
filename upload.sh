@@ -185,9 +185,9 @@ if [[ ${#FROM} -gt 0 ]]; then
         INFORM $"CREATING ARCHIVE"
         TMP_FILE=$(($RANDOM$RANDOM%99999999+10000000))
         TMP_FILE="/tmp/$TMP_FILE.zip"
-        printf "$BOLD $ $ZIP -9 -q -r ${TMP_FILE} $FROM$NORMAL [Enter/Ctrl-C] ?\n"
+        printf "$BOLD $ (cd $FROM && $ZIP -9 -q -r ${TMP_FILE} . -x \"*.git*\" -x \"*.DS_Store*\" -x \"*README*\")$NORMAL [Enter/Ctrl-C] ?\n"
         [ $INTERACTIVE -eq 1 ] && read
-        $ZIP -9 -q -r "${TMP_FILE}" "$FROM" || exit 1
+        (cd $FROM && $ZIP -9 -q -r "${TMP_FILE}" . -x "*.git*" -x "*.DS_Store*" -x "*README*") || exit 1
         FROM=$TMP_FILE
     fi
 
