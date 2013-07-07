@@ -15,6 +15,7 @@ NORMAL=`tput sgr0`
 INTERACTIVE=1
 OVERWRITE=1
 KEEPARCHIVE=0
+PLAINOUTPUT=0
 GETTEXT="$(which gettext)"
 OLDIFS=$IFS
 
@@ -70,6 +71,7 @@ HELP()
     echo $"  -k, --keep-archive           Do not delete the archive file"
     echo $"  -y, --assumeyes, -n, --non-interactive"
     echo $"                               Execute commands without confirmations"
+    echo $"  -p, --plain-output           Plain inform bar and progress bar"
     exit 0
 }
 
@@ -91,13 +93,17 @@ GET_WIDTH_OF()
 INFORM()
 {
     INFORM_TEXT="`echo "$1" ${@:2}`"
-    GET_WIDTH_OF "$INFORM_TEXT" TO INFORM_TEXT_WIDTH
-    printf "\e[1;33;42m"
-    FRONT_SPACES=$(( ($COLS - $INFORM_TEXT_WIDTH) / 2 ))
-    printf "${BOLD}%*s" $FRONT_SPACES
-    printf "${INFORM_TEXT}"
-    printf "%*s" $(( $COLS - $INFORM_TEXT_WIDTH - $FRONT_SPACES ))
-    printf "${NORMAL}\n"
+    if [[ PLAINOUTPUT -eq 1 ]]; then
+        printf "<<< ${INFORM_TEXT} >>>\n"
+    else
+        GET_WIDTH_OF "$INFORM_TEXT" TO INFORM_TEXT_WIDTH
+        printf "\e[1;33;42m"
+        FRONT_SPACES=$(( ($COLS - $INFORM_TEXT_WIDTH) / 2 ))
+        printf "${BOLD}%*s" $FRONT_SPACES
+        printf "${INFORM_TEXT}"
+        printf "%*s" $(( $COLS - $INFORM_TEXT_WIDTH - $FRONT_SPACES ))
+        printf "${NORMAL}\n"
+    fi
 }
 
 [ $# -eq 0 ] && HELP
@@ -158,6 +164,10 @@ while [[ $# -gt 0 ]]; do
             shift
             INTERACTIVE=0
             ;;
+        -p|--plain-output)
+            shift
+            PLAINOUTPUT=1
+            ;;
         *)
             HELP
             break
@@ -210,11 +220,16 @@ if [[ ${#FROM} -gt 0 ]]; then
 
     INFORM $"UPLOADING FILE"
 
-    printf "$BOLD $ $CURL --ftp-create-dirs -T ${FROM} "
+    PROGRESS=""
+    if [[ PLAINOUTPUT -eq 1 ]]; then
+        PROGRESS="--progress-bar"
+    fi
+
+    printf "$BOLD $ ${CURL} ${PROGRESS} --ftp-create-dirs -T ${FROM} "
     printf "${FTP}${REMOTE_DIR}${TO}$NORMAL [Enter/Ctrl-C] ?\n"
     [ $INTERACTIVE -eq 1 ] && read
 
-    $CURL --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"
+    ${CURL} ${PROGRESS} --ftp-create-dirs -T "${FROM}" "${FTP}${REMOTE_DIR}${TO}"
 
     if [[ ${#TMP_FILE} -gt 0 ]]; then
         rm -f "${TMP_FILE}"

@@ -69,6 +69,7 @@ upload.sh
       -k, --keep-archive           Do not delete the archive file
       -y, --assumeyes, -n, --non-interactive
                                    Execute commands without confirmations
+      -p, --plain-output           Plain inform bar and progress bar"
 
 listing.sh
 ----------
