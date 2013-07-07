@@ -9,9 +9,9 @@ INFO_SH="info.sh"
 REMOTE_DIR="/htdocs"
 ZIP="$(which zip)"
 EXTRACT=0
-COLS=`tput cols`
-BOLD=`tput bold`
-NORMAL=`tput sgr0`
+COLS=""
+BOLD=""
+NORMAL=""
 INTERACTIVE=1
 OVERWRITE=1
 KEEPARCHIVE=0
@@ -174,6 +174,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+if [[ PLAINOUTPUT -eq 0 ]]; then
+    COLS=`tput cols`
+    BOLD=`tput bold`
+    NORMAL=`tput sgr0`
+fi
 
 IFS=$'\n'
 
