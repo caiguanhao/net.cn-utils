@@ -317,22 +317,19 @@ then
         exit 1
     fi
 
-    DELI="<td class='bian5'>"
+    DELI="hdm"
 
     _INFO=${INFO%%${DELI}*}
     _INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
 
-    DBNAME=${_INFO%%<*}
+    DBNAME="hdm${_INFO%%db*}db"
 
-    INFO=${_INFO%%${DELI}*}
-    _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
+    DELI='http://phpmyadmin.hichina.com/'
 
-    DELI="href='"
+    _INFO=${INFO%%${DELI}*}
+    _INFO=${INFO:$(( ${#_INFO} + ${#DELI} ))}
 
-    INFO=${_INFO%%${DELI}*}
-    _INFO=${_INFO:$(( ${#INFO} + ${#DELI} ))}
-
-    DBLINK=${_INFO%%\'*}
+    DBLINK="${DELI}${_INFO%%\\\"*}"
 
     if [[ $PART5 -eq 0 ]] && [[ $PART6 -eq 0 ]]; then
         echo $"  phpMyAdmin Link:          %s" "${DBLINK}"
